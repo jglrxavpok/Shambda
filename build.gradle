@@ -1,0 +1,79 @@
+group 'org.jglrxavpok'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'antlr'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+import org.gradle.internal.os.OperatingSystem
+
+switch ( OperatingSystem.current() ) {
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/main/gen"]
+        }
+        resources {
+            srcDirs = ["src/main/resources"]
+        }
+    }
+    test {
+        java {
+            srcDirs = ["src/test/java"]
+        }
+        resources {
+            srcDirs = ["src/test/resources"]
+        }
+    }
+}
+
+project.ext.lwjglVersion = "3.1.1"
+project.ext.jomlVersion = "1.9.2"
+project.ext.steamworks4jVersion = "1.6.1"
+
+dependencies {
+    antlr "org.antlr:antlr4:4.6" // use ANTLR version 4
+
+    compile project(":SBM")
+    compile project(":Flows")
+    testCompile "org.lwjgl:lwjgl:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-bgfx:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-nanovg:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-opencl:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-opengl:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-opengles:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+    testCompile "org.lwjgl:lwjgl-vulkan:${lwjglVersion}"
+    testRuntime "org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-bgfx:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-jemalloc:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-nanovg:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-openal:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-opengles:${lwjglVersion}:${lwjglNatives}"
+    testRuntime "org.lwjgl:lwjgl-stb:${lwjglVersion}:${lwjglNatives}"
+    testCompile "org.joml:joml:${jomlVersion}"
+    testCompile "com.code-disaster.steamworks4j:steamworks4j:${steamworks4jVersion}"
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
