@@ -41,42 +41,6 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionBody(ShambdaParser.FunctionBodyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#integer}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInteger(ShambdaParser.IntegerContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#unsignedInteger}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitUnsignedInteger(ShambdaParser.UnsignedIntegerContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#unsignedLong}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitUnsignedLong(ShambdaParser.UnsignedLongContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#longNumber}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLongNumber(ShambdaParser.LongNumberContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#doubleNumber}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDoubleNumber(ShambdaParser.DoubleNumberContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#floatingPointNumber}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFloatingPointNumber(ShambdaParser.FloatingPointNumberContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ShambdaParser#constantExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

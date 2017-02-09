@@ -58,66 +58,6 @@ public interface ShambdaListener extends ParseTreeListener {
 	 */
 	void exitFunctionBody(ShambdaParser.FunctionBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#integer}.
-	 * @param ctx the parse tree
-	 */
-	void enterInteger(ShambdaParser.IntegerContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#integer}.
-	 * @param ctx the parse tree
-	 */
-	void exitInteger(ShambdaParser.IntegerContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#unsignedInteger}.
-	 * @param ctx the parse tree
-	 */
-	void enterUnsignedInteger(ShambdaParser.UnsignedIntegerContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#unsignedInteger}.
-	 * @param ctx the parse tree
-	 */
-	void exitUnsignedInteger(ShambdaParser.UnsignedIntegerContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#unsignedLong}.
-	 * @param ctx the parse tree
-	 */
-	void enterUnsignedLong(ShambdaParser.UnsignedLongContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#unsignedLong}.
-	 * @param ctx the parse tree
-	 */
-	void exitUnsignedLong(ShambdaParser.UnsignedLongContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#longNumber}.
-	 * @param ctx the parse tree
-	 */
-	void enterLongNumber(ShambdaParser.LongNumberContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#longNumber}.
-	 * @param ctx the parse tree
-	 */
-	void exitLongNumber(ShambdaParser.LongNumberContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#doubleNumber}.
-	 * @param ctx the parse tree
-	 */
-	void enterDoubleNumber(ShambdaParser.DoubleNumberContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#doubleNumber}.
-	 * @param ctx the parse tree
-	 */
-	void exitDoubleNumber(ShambdaParser.DoubleNumberContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#floatingPointNumber}.
-	 * @param ctx the parse tree
-	 */
-	void enterFloatingPointNumber(ShambdaParser.FloatingPointNumberContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#floatingPointNumber}.
-	 * @param ctx the parse tree
-	 */
-	void exitFloatingPointNumber(ShambdaParser.FloatingPointNumberContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ShambdaParser#constantExpression}.
 	 * @param ctx the parse tree
 	 */

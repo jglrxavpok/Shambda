@@ -18,42 +18,42 @@ public class ShambdaParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, FLOAT_TERMINATOR=19, LONG_TERMINATOR=20, DOUBLE_SEMI_COLON=21, 
-		SEMI_COLON=22, DIGIT=23, PERIOD=24, PLUS=25, MINUS=26, MULTIPLY=27, DIVISION=28, 
-		COLON=29, LEFT_PAREN=30, RIGHT_PAREN=31, SMALL_ARROW=32, ASSIGN_SIGN=33, 
-		EQUAL_SIGN=34, LOWERCASE_LETTER=35, UPPERCASE_LETTER=36, STAR=37, WHITESPACE=38, 
-		Identifier=39;
+		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, UnsignedInteger=17, 
+		UnsignedLong=18, LongNumber=19, DoubleNumber=20, FloatingPointNumber=21, 
+		Integer=22, FLOAT_TERMINATOR=23, LONG_TERMINATOR=24, DOUBLE_SEMI_COLON=25, 
+		SEMI_COLON=26, PERIOD=27, PLUS=28, MINUS=29, MULTIPLY=30, DIVISION=31, 
+		COLON=32, LEFT_PAREN=33, RIGHT_PAREN=34, SMALL_ARROW=35, ASSIGN_SIGN=36, 
+		EQUAL_SIGN=37, LOWERCASE_LETTER=38, UPPERCASE_LETTER=39, STAR=40, WHITESPACE=41, 
+		Identifier=42;
 	public static final int
 		RULE_file = 0, RULE_constantDeclaration = 1, RULE_uniformDeclaration = 2, 
-		RULE_functionDeclaration = 3, RULE_functionBody = 4, RULE_integer = 5, 
-		RULE_unsignedInteger = 6, RULE_unsignedLong = 7, RULE_longNumber = 8, 
-		RULE_doubleNumber = 9, RULE_floatingPointNumber = 10, RULE_constantExpression = 11, 
-		RULE_expression = 12, RULE_dereference = 13, RULE_statement = 14, RULE_variableAssignment = 15, 
-		RULE_variableDeclaration = 16, RULE_functionCall = 17, RULE_type = 18, 
-		RULE_storageClass = 19, RULE_parameter = 20;
+		RULE_functionDeclaration = 3, RULE_functionBody = 4, RULE_constantExpression = 5, 
+		RULE_expression = 6, RULE_dereference = 7, RULE_statement = 8, RULE_variableAssignment = 9, 
+		RULE_variableDeclaration = 10, RULE_functionCall = 11, RULE_type = 12, 
+		RULE_storageClass = 13, RULE_parameter = 14;
 	public static final String[] ruleNames = {
 		"file", "constantDeclaration", "uniformDeclaration", "functionDeclaration", 
-		"functionBody", "integer", "unsignedInteger", "unsignedLong", "longNumber", 
-		"doubleNumber", "floatingPointNumber", "constantExpression", "expression", 
-		"dereference", "statement", "variableAssignment", "variableDeclaration", 
-		"functionCall", "type", "storageClass", "parameter"
+		"functionBody", "constantExpression", "expression", "dereference", "statement", 
+		"variableAssignment", "variableDeclaration", "functionCall", "type", "storageClass", 
+		"parameter"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'constant'", "'uniform'", "'u'", "'d'", "'!'", "'let'", "'UniformConstant'", 
+		null, "'constant'", "'uniform'", "'!'", "'let'", "'UniformConstant'", 
 		"'Input'", "'Uniform'", "'Output'", "'Workgroup'", "'CrossWorkgroup'", 
 		"'Private'", "'Function'", "'Generic'", "'PushConstant'", "'AtomicCounter'", 
-		"'Image'", "'f'", "'L'", "';;'", "';'", null, "'.'", "'+'", "'-'", "'*'", 
-		"'/'", "':'", "'('", "')'", "'->'", "':='", "'='"
+		"'Image'", null, null, null, null, null, null, "'f'", "'L'", "';;'", "';'", 
+		"'.'", "'+'", "'-'", "'*'", "'/'", "':'", "'('", "')'", "'->'", "':='", 
+		"'='"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, "FLOAT_TERMINATOR", "LONG_TERMINATOR", 
-		"DOUBLE_SEMI_COLON", "SEMI_COLON", "DIGIT", "PERIOD", "PLUS", "MINUS", 
-		"MULTIPLY", "DIVISION", "COLON", "LEFT_PAREN", "RIGHT_PAREN", "SMALL_ARROW", 
-		"ASSIGN_SIGN", "EQUAL_SIGN", "LOWERCASE_LETTER", "UPPERCASE_LETTER", "STAR", 
-		"WHITESPACE", "Identifier"
+		null, null, null, null, null, "UnsignedInteger", "UnsignedLong", "LongNumber", 
+		"DoubleNumber", "FloatingPointNumber", "Integer", "FLOAT_TERMINATOR", 
+		"LONG_TERMINATOR", "DOUBLE_SEMI_COLON", "SEMI_COLON", "PERIOD", "PLUS", 
+		"MINUS", "MULTIPLY", "DIVISION", "COLON", "LEFT_PAREN", "RIGHT_PAREN", 
+		"SMALL_ARROW", "ASSIGN_SIGN", "EQUAL_SIGN", "LOWERCASE_LETTER", "UPPERCASE_LETTER", 
+		"STAR", "WHITESPACE", "Identifier"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -149,29 +149,29 @@ public class ShambdaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(47);
+			setState(35);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__1) | (1L << Identifier))) != 0)) {
 				{
-				setState(45);
+				setState(33);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case Identifier:
 					{
-					setState(42);
+					setState(30);
 					functionDeclaration();
 					}
 					break;
 				case T__1:
 					{
-					setState(43);
+					setState(31);
 					uniformDeclaration();
 					}
 					break;
 				case T__0:
 					{
-					setState(44);
+					setState(32);
 					constantDeclaration();
 					}
 					break;
@@ -179,7 +179,7 @@ public class ShambdaParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(49);
+				setState(37);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -230,15 +230,15 @@ public class ShambdaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(50);
+			setState(38);
 			match(T__0);
-			setState(51);
+			setState(39);
 			parameter();
-			setState(52);
+			setState(40);
 			match(EQUAL_SIGN);
-			setState(53);
+			setState(41);
 			constantExpression();
-			setState(54);
+			setState(42);
 			match(DOUBLE_SEMI_COLON);
 			}
 		}
@@ -283,11 +283,11 @@ public class ShambdaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(56);
+			setState(44);
 			match(T__1);
-			setState(57);
+			setState(45);
 			parameter();
-			setState(58);
+			setState(46);
 			match(DOUBLE_SEMI_COLON);
 			}
 		}
@@ -339,25 +339,25 @@ public class ShambdaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(60);
+			setState(48);
 			parameter();
-			setState(64);
+			setState(52);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==Identifier) {
 				{
 				{
-				setState(61);
+				setState(49);
 				parameter();
 				}
 				}
-				setState(66);
+				setState(54);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(67);
+			setState(55);
 			match(EQUAL_SIGN);
-			setState(68);
+			setState(56);
 			functionBody();
 			}
 		}
@@ -410,25 +410,25 @@ public class ShambdaParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(70);
+			setState(58);
 			statement();
-			setState(75);
+			setState(63);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SEMI_COLON) {
 				{
 				{
-				setState(71);
+				setState(59);
 				match(SEMI_COLON);
-				setState(72);
+				setState(60);
 				statement();
 				}
 				}
-				setState(77);
+				setState(65);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(78);
+			setState(66);
 			match(DOUBLE_SEMI_COLON);
 			}
 		}
@@ -443,355 +443,13 @@ public class ShambdaParser extends Parser {
 		return _localctx;
 	}
 
-	public static class IntegerContext extends ParserRuleContext {
-		public List<TerminalNode> DIGIT() { return getTokens(ShambdaParser.DIGIT); }
-		public TerminalNode DIGIT(int i) {
-			return getToken(ShambdaParser.DIGIT, i);
-		}
-		public IntegerContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_integer; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).enterInteger(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).exitInteger(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShambdaVisitor ) return ((ShambdaVisitor<? extends T>)visitor).visitInteger(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final IntegerContext integer() throws RecognitionException {
-		IntegerContext _localctx = new IntegerContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_integer);
-		try {
-			int _alt;
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(81); 
-			_errHandler.sync(this);
-			_alt = 1;
-			do {
-				switch (_alt) {
-				case 1:
-					{
-					{
-					setState(80);
-					match(DIGIT);
-					}
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
-				}
-				setState(83); 
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
-			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class UnsignedIntegerContext extends ParserRuleContext {
-		public IntegerContext integer() {
-			return getRuleContext(IntegerContext.class,0);
-		}
-		public UnsignedIntegerContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_unsignedInteger; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).enterUnsignedInteger(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).exitUnsignedInteger(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShambdaVisitor ) return ((ShambdaVisitor<? extends T>)visitor).visitUnsignedInteger(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final UnsignedIntegerContext unsignedInteger() throws RecognitionException {
-		UnsignedIntegerContext _localctx = new UnsignedIntegerContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_unsignedInteger);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(85);
-			match(T__2);
-			setState(86);
-			integer();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class UnsignedLongContext extends ParserRuleContext {
-		public LongNumberContext longNumber() {
-			return getRuleContext(LongNumberContext.class,0);
-		}
-		public UnsignedLongContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_unsignedLong; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).enterUnsignedLong(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).exitUnsignedLong(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShambdaVisitor ) return ((ShambdaVisitor<? extends T>)visitor).visitUnsignedLong(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final UnsignedLongContext unsignedLong() throws RecognitionException {
-		UnsignedLongContext _localctx = new UnsignedLongContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_unsignedLong);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(88);
-			match(T__2);
-			setState(89);
-			longNumber();
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class LongNumberContext extends ParserRuleContext {
-		public IntegerContext integer() {
-			return getRuleContext(IntegerContext.class,0);
-		}
-		public TerminalNode LONG_TERMINATOR() { return getToken(ShambdaParser.LONG_TERMINATOR, 0); }
-		public LongNumberContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_longNumber; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).enterLongNumber(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).exitLongNumber(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShambdaVisitor ) return ((ShambdaVisitor<? extends T>)visitor).visitLongNumber(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final LongNumberContext longNumber() throws RecognitionException {
-		LongNumberContext _localctx = new LongNumberContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_longNumber);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(91);
-			integer();
-			setState(92);
-			match(LONG_TERMINATOR);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class DoubleNumberContext extends ParserRuleContext {
-		public List<IntegerContext> integer() {
-			return getRuleContexts(IntegerContext.class);
-		}
-		public IntegerContext integer(int i) {
-			return getRuleContext(IntegerContext.class,i);
-		}
-		public TerminalNode PERIOD() { return getToken(ShambdaParser.PERIOD, 0); }
-		public DoubleNumberContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_doubleNumber; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).enterDoubleNumber(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).exitDoubleNumber(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShambdaVisitor ) return ((ShambdaVisitor<? extends T>)visitor).visitDoubleNumber(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final DoubleNumberContext doubleNumber() throws RecognitionException {
-		DoubleNumberContext _localctx = new DoubleNumberContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_doubleNumber);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(94);
-			integer();
-			setState(97);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==PERIOD) {
-				{
-				setState(95);
-				match(PERIOD);
-				setState(96);
-				integer();
-				}
-			}
-
-			setState(99);
-			match(T__3);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class FloatingPointNumberContext extends ParserRuleContext {
-		public List<IntegerContext> integer() {
-			return getRuleContexts(IntegerContext.class);
-		}
-		public IntegerContext integer(int i) {
-			return getRuleContext(IntegerContext.class,i);
-		}
-		public TerminalNode FLOAT_TERMINATOR() { return getToken(ShambdaParser.FLOAT_TERMINATOR, 0); }
-		public TerminalNode PERIOD() { return getToken(ShambdaParser.PERIOD, 0); }
-		public FloatingPointNumberContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_floatingPointNumber; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).enterFloatingPointNumber(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ShambdaListener ) ((ShambdaListener)listener).exitFloatingPointNumber(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ShambdaVisitor ) return ((ShambdaVisitor<? extends T>)visitor).visitFloatingPointNumber(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final FloatingPointNumberContext floatingPointNumber() throws RecognitionException {
-		FloatingPointNumberContext _localctx = new FloatingPointNumberContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_floatingPointNumber);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(101);
-			integer();
-			setState(104);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==PERIOD) {
-				{
-				setState(102);
-				match(PERIOD);
-				setState(103);
-				integer();
-				}
-			}
-
-			setState(106);
-			match(FLOAT_TERMINATOR);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public static class ConstantExpressionContext extends ParserRuleContext {
-		public IntegerContext integer() {
-			return getRuleContext(IntegerContext.class,0);
-		}
-		public FloatingPointNumberContext floatingPointNumber() {
-			return getRuleContext(FloatingPointNumberContext.class,0);
-		}
-		public LongNumberContext longNumber() {
-			return getRuleContext(LongNumberContext.class,0);
-		}
-		public DoubleNumberContext doubleNumber() {
-			return getRuleContext(DoubleNumberContext.class,0);
-		}
-		public UnsignedIntegerContext unsignedInteger() {
-			return getRuleContext(UnsignedIntegerContext.class,0);
-		}
-		public UnsignedLongContext unsignedLong() {
-			return getRuleContext(UnsignedLongContext.class,0);
-		}
+		public TerminalNode Integer() { return getToken(ShambdaParser.Integer, 0); }
+		public TerminalNode FloatingPointNumber() { return getToken(ShambdaParser.FloatingPointNumber, 0); }
+		public TerminalNode LongNumber() { return getToken(ShambdaParser.LongNumber, 0); }
+		public TerminalNode DoubleNumber() { return getToken(ShambdaParser.DoubleNumber, 0); }
+		public TerminalNode UnsignedInteger() { return getToken(ShambdaParser.UnsignedInteger, 0); }
+		public TerminalNode UnsignedLong() { return getToken(ShambdaParser.UnsignedLong, 0); }
 		public ConstantExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -813,53 +471,21 @@ public class ShambdaParser extends Parser {
 
 	public final ConstantExpressionContext constantExpression() throws RecognitionException {
 		ConstantExpressionContext _localctx = new ConstantExpressionContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_constantExpression);
+		enterRule(_localctx, 10, RULE_constantExpression);
+		int _la;
 		try {
-			setState(114);
-			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
-			case 1:
-				enterOuterAlt(_localctx, 1);
-				{
-				setState(108);
-				integer();
-				}
-				break;
-			case 2:
-				enterOuterAlt(_localctx, 2);
-				{
-				setState(109);
-				floatingPointNumber();
-				}
-				break;
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(110);
-				longNumber();
-				}
-				break;
-			case 4:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(111);
-				doubleNumber();
-				}
-				break;
-			case 5:
-				enterOuterAlt(_localctx, 5);
-				{
-				setState(112);
-				unsignedInteger();
-				}
-				break;
-			case 6:
-				enterOuterAlt(_localctx, 6);
-				{
-				setState(113);
-				unsignedLong();
-				}
-				break;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(68);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << UnsignedInteger) | (1L << UnsignedLong) | (1L << LongNumber) | (1L << DoubleNumber) | (1L << FloatingPointNumber) | (1L << Integer))) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				//if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -910,47 +536,47 @@ public class ShambdaParser extends Parser {
 
 	public final ExpressionContext expression() throws RecognitionException {
 		ExpressionContext _localctx = new ExpressionContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_expression);
+		enterRule(_localctx, 12, RULE_expression);
 		try {
-			setState(124);
+			setState(78);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(116);
+				setState(70);
 				functionCall();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(117);
+				setState(71);
 				constantExpression();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(118);
+				setState(72);
 				dereference();
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(119);
+				setState(73);
 				match(Identifier);
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(120);
+				setState(74);
 				match(LEFT_PAREN);
-				setState(121);
+				setState(75);
 				expression();
-				setState(122);
+				setState(76);
 				match(RIGHT_PAREN);
 				}
 				break;
@@ -968,7 +594,9 @@ public class ShambdaParser extends Parser {
 	}
 
 	public static class DereferenceContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(ShambdaParser.Identifier, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
 		public DereferenceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -990,14 +618,14 @@ public class ShambdaParser extends Parser {
 
 	public final DereferenceContext dereference() throws RecognitionException {
 		DereferenceContext _localctx = new DereferenceContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_dereference);
+		enterRule(_localctx, 14, RULE_dereference);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(126);
-			match(T__4);
-			setState(127);
-			match(Identifier);
+			setState(80);
+			match(T__2);
+			setState(81);
+			expression();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1042,29 +670,29 @@ public class ShambdaParser extends Parser {
 
 	public final StatementContext statement() throws RecognitionException {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_statement);
+		enterRule(_localctx, 16, RULE_statement);
 		try {
-			setState(132);
+			setState(86);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(129);
+				setState(83);
 				expression();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(130);
+				setState(84);
 				variableDeclaration();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(131);
+				setState(85);
 				variableAssignment();
 				}
 				break;
@@ -1110,15 +738,15 @@ public class ShambdaParser extends Parser {
 
 	public final VariableAssignmentContext variableAssignment() throws RecognitionException {
 		VariableAssignmentContext _localctx = new VariableAssignmentContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_variableAssignment);
+		enterRule(_localctx, 18, RULE_variableAssignment);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(134);
+			setState(88);
 			parameter();
-			setState(135);
+			setState(89);
 			match(ASSIGN_SIGN);
-			setState(136);
+			setState(90);
 			expression();
 			}
 		}
@@ -1158,13 +786,13 @@ public class ShambdaParser extends Parser {
 
 	public final VariableDeclarationContext variableDeclaration() throws RecognitionException {
 		VariableDeclarationContext _localctx = new VariableDeclarationContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_variableDeclaration);
+		enterRule(_localctx, 20, RULE_variableDeclaration);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(138);
-			match(T__5);
-			setState(139);
+			setState(92);
+			match(T__3);
+			setState(93);
 			variableAssignment();
 			}
 		}
@@ -1208,28 +836,28 @@ public class ShambdaParser extends Parser {
 
 	public final FunctionCallContext functionCall() throws RecognitionException {
 		FunctionCallContext _localctx = new FunctionCallContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_functionCall);
+		enterRule(_localctx, 22, RULE_functionCall);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(141);
+			setState(95);
 			match(Identifier);
-			setState(145);
+			setState(99);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(142);
+					setState(96);
 					expression();
 					}
 					} 
 				}
-				setState(147);
+				setState(101);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,10,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			}
 			}
 		}
@@ -1282,38 +910,38 @@ public class ShambdaParser extends Parser {
 		int _parentState = getState();
 		TypeContext _localctx = new TypeContext(_ctx, _parentState);
 		TypeContext _prevctx = _localctx;
-		int _startState = 36;
-		enterRecursionRule(_localctx, 36, RULE_type, _p);
+		int _startState = 24;
+		enterRecursionRule(_localctx, 24, RULE_type, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(155);
+			setState(109);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 			case 1:
 				{
-				setState(149);
+				setState(103);
 				match(Identifier);
 				}
 				break;
 			case 2:
 				{
-				setState(150);
+				setState(104);
 				match(Identifier);
-				setState(151);
+				setState(105);
 				match(LEFT_PAREN);
-				setState(152);
+				setState(106);
 				type(0);
-				setState(153);
+				setState(107);
 				match(RIGHT_PAREN);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(165);
+			setState(119);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
@@ -1322,22 +950,22 @@ public class ShambdaParser extends Parser {
 					{
 					_localctx = new TypeContext(_parentctx, _parentState);
 					pushNewRecursionContext(_localctx, _startState, RULE_type);
-					setState(157);
+					setState(111);
 					if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-					setState(158);
+					setState(112);
 					match(MULTIPLY);
-					setState(159);
+					setState(113);
 					match(LEFT_PAREN);
-					setState(160);
+					setState(114);
 					storageClass();
-					setState(161);
+					setState(115);
 					match(RIGHT_PAREN);
 					}
 					} 
 				}
-				setState(167);
+				setState(121);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			}
 			}
 		}
@@ -1374,18 +1002,18 @@ public class ShambdaParser extends Parser {
 
 	public final StorageClassContext storageClass() throws RecognitionException {
 		StorageClassContext _localctx = new StorageClassContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_storageClass);
+		enterRule(_localctx, 26, RULE_storageClass);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(168);
+			setState(122);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__6) | (1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__14) | (1L << T__15) | (1L << T__16) | (1L << T__17))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__10) | (1L << T__11) | (1L << T__12) | (1L << T__13) | (1L << T__14) | (1L << T__15))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				//if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
 				_errHandler.reportMatch(this);
 				consume();
 			}
@@ -1429,21 +1057,21 @@ public class ShambdaParser extends Parser {
 
 	public final ParameterContext parameter() throws RecognitionException {
 		ParameterContext _localctx = new ParameterContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_parameter);
+		enterRule(_localctx, 28, RULE_parameter);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(170);
+			setState(124);
 			match(Identifier);
-			setState(173);
+			setState(127);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==COLON) {
 				{
-				setState(171);
+				setState(125);
 				match(COLON);
-				setState(172);
+				setState(126);
 				type(0);
 				}
 			}
@@ -1463,7 +1091,7 @@ public class ShambdaParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 18:
+		case 12:
 			return type_sempred((TypeContext)_localctx, predIndex);
 		}
 		return true;
@@ -1477,56 +1105,38 @@ public class ShambdaParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3)\u00b2\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3,\u0084\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
-		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
-		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\3\2\3\2\3\2\7\2\60\n\2\f\2\16"+
-		"\2\63\13\2\3\3\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\7\5A\n\5\f"+
-		"\5\16\5D\13\5\3\5\3\5\3\5\3\6\3\6\3\6\7\6L\n\6\f\6\16\6O\13\6\3\6\3\6"+
-		"\3\7\6\7T\n\7\r\7\16\7U\3\b\3\b\3\b\3\t\3\t\3\t\3\n\3\n\3\n\3\13\3\13"+
-		"\3\13\5\13d\n\13\3\13\3\13\3\f\3\f\3\f\5\fk\n\f\3\f\3\f\3\r\3\r\3\r\3"+
-		"\r\3\r\3\r\5\ru\n\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\5\16\177\n"+
-		"\16\3\17\3\17\3\17\3\20\3\20\3\20\5\20\u0087\n\20\3\21\3\21\3\21\3\21"+
-		"\3\22\3\22\3\22\3\23\3\23\7\23\u0092\n\23\f\23\16\23\u0095\13\23\3\24"+
-		"\3\24\3\24\3\24\3\24\3\24\3\24\5\24\u009e\n\24\3\24\3\24\3\24\3\24\3\24"+
-		"\3\24\7\24\u00a6\n\24\f\24\16\24\u00a9\13\24\3\25\3\25\3\26\3\26\3\26"+
-		"\5\26\u00b0\n\26\3\26\2\3&\27\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 "+
-		"\"$&(*\2\3\3\2\t\24\u00b3\2\61\3\2\2\2\4\64\3\2\2\2\6:\3\2\2\2\b>\3\2"+
-		"\2\2\nH\3\2\2\2\fS\3\2\2\2\16W\3\2\2\2\20Z\3\2\2\2\22]\3\2\2\2\24`\3\2"+
-		"\2\2\26g\3\2\2\2\30t\3\2\2\2\32~\3\2\2\2\34\u0080\3\2\2\2\36\u0086\3\2"+
-		"\2\2 \u0088\3\2\2\2\"\u008c\3\2\2\2$\u008f\3\2\2\2&\u009d\3\2\2\2(\u00aa"+
-		"\3\2\2\2*\u00ac\3\2\2\2,\60\5\b\5\2-\60\5\6\4\2.\60\5\4\3\2/,\3\2\2\2"+
-		"/-\3\2\2\2/.\3\2\2\2\60\63\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\3\3\2"+
-		"\2\2\63\61\3\2\2\2\64\65\7\3\2\2\65\66\5*\26\2\66\67\7$\2\2\678\5\30\r"+
-		"\289\7\27\2\29\5\3\2\2\2:;\7\4\2\2;<\5*\26\2<=\7\27\2\2=\7\3\2\2\2>B\5"+
-		"*\26\2?A\5*\26\2@?\3\2\2\2AD\3\2\2\2B@\3\2\2\2BC\3\2\2\2CE\3\2\2\2DB\3"+
-		"\2\2\2EF\7$\2\2FG\5\n\6\2G\t\3\2\2\2HM\5\36\20\2IJ\7\30\2\2JL\5\36\20"+
-		"\2KI\3\2\2\2LO\3\2\2\2MK\3\2\2\2MN\3\2\2\2NP\3\2\2\2OM\3\2\2\2PQ\7\27"+
-		"\2\2Q\13\3\2\2\2RT\7\31\2\2SR\3\2\2\2TU\3\2\2\2US\3\2\2\2UV\3\2\2\2V\r"+
-		"\3\2\2\2WX\7\5\2\2XY\5\f\7\2Y\17\3\2\2\2Z[\7\5\2\2[\\\5\22\n\2\\\21\3"+
-		"\2\2\2]^\5\f\7\2^_\7\26\2\2_\23\3\2\2\2`c\5\f\7\2ab\7\32\2\2bd\5\f\7\2"+
-		"ca\3\2\2\2cd\3\2\2\2de\3\2\2\2ef\7\6\2\2f\25\3\2\2\2gj\5\f\7\2hi\7\32"+
-		"\2\2ik\5\f\7\2jh\3\2\2\2jk\3\2\2\2kl\3\2\2\2lm\7\25\2\2m\27\3\2\2\2nu"+
-		"\5\f\7\2ou\5\26\f\2pu\5\22\n\2qu\5\24\13\2ru\5\16\b\2su\5\20\t\2tn\3\2"+
-		"\2\2to\3\2\2\2tp\3\2\2\2tq\3\2\2\2tr\3\2\2\2ts\3\2\2\2u\31\3\2\2\2v\177"+
-		"\5$\23\2w\177\5\30\r\2x\177\5\34\17\2y\177\7)\2\2z{\7 \2\2{|\5\32\16\2"+
-		"|}\7!\2\2}\177\3\2\2\2~v\3\2\2\2~w\3\2\2\2~x\3\2\2\2~y\3\2\2\2~z\3\2\2"+
-		"\2\177\33\3\2\2\2\u0080\u0081\7\7\2\2\u0081\u0082\7)\2\2\u0082\35\3\2"+
-		"\2\2\u0083\u0087\5\32\16\2\u0084\u0087\5\"\22\2\u0085\u0087\5 \21\2\u0086"+
-		"\u0083\3\2\2\2\u0086\u0084\3\2\2\2\u0086\u0085\3\2\2\2\u0087\37\3\2\2"+
-		"\2\u0088\u0089\5*\26\2\u0089\u008a\7#\2\2\u008a\u008b\5\32\16\2\u008b"+
-		"!\3\2\2\2\u008c\u008d\7\b\2\2\u008d\u008e\5 \21\2\u008e#\3\2\2\2\u008f"+
-		"\u0093\7)\2\2\u0090\u0092\5\32\16\2\u0091\u0090\3\2\2\2\u0092\u0095\3"+
-		"\2\2\2\u0093\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094%\3\2\2\2\u0095\u0093"+
-		"\3\2\2\2\u0096\u0097\b\24\1\2\u0097\u009e\7)\2\2\u0098\u0099\7)\2\2\u0099"+
-		"\u009a\7 \2\2\u009a\u009b\5&\24\2\u009b\u009c\7!\2\2\u009c\u009e\3\2\2"+
-		"\2\u009d\u0096\3\2\2\2\u009d\u0098\3\2\2\2\u009e\u00a7\3\2\2\2\u009f\u00a0"+
-		"\f\3\2\2\u00a0\u00a1\7\35\2\2\u00a1\u00a2\7 \2\2\u00a2\u00a3\5(\25\2\u00a3"+
-		"\u00a4\7!\2\2\u00a4\u00a6\3\2\2\2\u00a5\u009f\3\2\2\2\u00a6\u00a9\3\2"+
-		"\2\2\u00a7\u00a5\3\2\2\2\u00a7\u00a8\3\2\2\2\u00a8\'\3\2\2\2\u00a9\u00a7"+
-		"\3\2\2\2\u00aa\u00ab\t\2\2\2\u00ab)\3\2\2\2\u00ac\u00af\7)\2\2\u00ad\u00ae"+
-		"\7\37\2\2\u00ae\u00b0\5&\24\2\u00af\u00ad\3\2\2\2\u00af\u00b0\3\2\2\2"+
-		"\u00b0+\3\2\2\2\20/\61BMUcjt~\u0086\u0093\u009d\u00a7\u00af";
+		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\3\2\3\2\3\2\7\2$\n\2"+
+		"\f\2\16\2\'\13\2\3\3\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\7\5\65"+
+		"\n\5\f\5\16\58\13\5\3\5\3\5\3\5\3\6\3\6\3\6\7\6@\n\6\f\6\16\6C\13\6\3"+
+		"\6\3\6\3\7\3\7\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\5\bQ\n\b\3\t\3\t\3\t\3"+
+		"\n\3\n\3\n\5\nY\n\n\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\r\3\r\7\rd\n\r\f"+
+		"\r\16\rg\13\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16\5\16p\n\16\3\16\3\16"+
+		"\3\16\3\16\3\16\3\16\7\16x\n\16\f\16\16\16{\13\16\3\17\3\17\3\20\3\20"+
+		"\3\20\5\20\u0082\n\20\3\20\2\3\32\21\2\4\6\b\n\f\16\20\22\24\26\30\32"+
+		"\34\36\2\4\3\2\23\30\3\2\7\22\u0083\2%\3\2\2\2\4(\3\2\2\2\6.\3\2\2\2\b"+
+		"\62\3\2\2\2\n<\3\2\2\2\fF\3\2\2\2\16P\3\2\2\2\20R\3\2\2\2\22X\3\2\2\2"+
+		"\24Z\3\2\2\2\26^\3\2\2\2\30a\3\2\2\2\32o\3\2\2\2\34|\3\2\2\2\36~\3\2\2"+
+		"\2 $\5\b\5\2!$\5\6\4\2\"$\5\4\3\2# \3\2\2\2#!\3\2\2\2#\"\3\2\2\2$\'\3"+
+		"\2\2\2%#\3\2\2\2%&\3\2\2\2&\3\3\2\2\2\'%\3\2\2\2()\7\3\2\2)*\5\36\20\2"+
+		"*+\7\'\2\2+,\5\f\7\2,-\7\33\2\2-\5\3\2\2\2./\7\4\2\2/\60\5\36\20\2\60"+
+		"\61\7\33\2\2\61\7\3\2\2\2\62\66\5\36\20\2\63\65\5\36\20\2\64\63\3\2\2"+
+		"\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\679\3\2\2\28\66\3\2\2\29:\7"+
+		"\'\2\2:;\5\n\6\2;\t\3\2\2\2<A\5\22\n\2=>\7\34\2\2>@\5\22\n\2?=\3\2\2\2"+
+		"@C\3\2\2\2A?\3\2\2\2AB\3\2\2\2BD\3\2\2\2CA\3\2\2\2DE\7\33\2\2E\13\3\2"+
+		"\2\2FG\t\2\2\2G\r\3\2\2\2HQ\5\30\r\2IQ\5\f\7\2JQ\5\20\t\2KQ\7,\2\2LM\7"+
+		"#\2\2MN\5\16\b\2NO\7$\2\2OQ\3\2\2\2PH\3\2\2\2PI\3\2\2\2PJ\3\2\2\2PK\3"+
+		"\2\2\2PL\3\2\2\2Q\17\3\2\2\2RS\7\5\2\2ST\5\16\b\2T\21\3\2\2\2UY\5\16\b"+
+		"\2VY\5\26\f\2WY\5\24\13\2XU\3\2\2\2XV\3\2\2\2XW\3\2\2\2Y\23\3\2\2\2Z["+
+		"\5\36\20\2[\\\7&\2\2\\]\5\16\b\2]\25\3\2\2\2^_\7\6\2\2_`\5\24\13\2`\27"+
+		"\3\2\2\2ae\7,\2\2bd\5\16\b\2cb\3\2\2\2dg\3\2\2\2ec\3\2\2\2ef\3\2\2\2f"+
+		"\31\3\2\2\2ge\3\2\2\2hi\b\16\1\2ip\7,\2\2jk\7,\2\2kl\7#\2\2lm\5\32\16"+
+		"\2mn\7$\2\2np\3\2\2\2oh\3\2\2\2oj\3\2\2\2py\3\2\2\2qr\f\3\2\2rs\7 \2\2"+
+		"st\7#\2\2tu\5\34\17\2uv\7$\2\2vx\3\2\2\2wq\3\2\2\2x{\3\2\2\2yw\3\2\2\2"+
+		"yz\3\2\2\2z\33\3\2\2\2{y\3\2\2\2|}\t\3\2\2}\35\3\2\2\2~\u0081\7,\2\2\177"+
+		"\u0080\7\"\2\2\u0080\u0082\5\32\16\2\u0081\177\3\2\2\2\u0081\u0082\3\2"+
+		"\2\2\u0082\37\3\2\2\2\f#%\66APXeoy\u0081";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

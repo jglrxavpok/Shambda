@@ -5,11 +5,13 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jglr.sbm.StorageClass;
 import org.jglr.sbm.types.*;
-import org.jglr.sbm.utils.ModuleGenerator;
+import org.jglr.sbm.utils.*;
 import org.jglr.shambda.grammar.ShambdaLexer;
 import org.jglr.shambda.grammar.ShambdaParser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ShambdaCompiler {
 
@@ -22,9 +24,13 @@ public class ShambdaCompiler {
     public static final IntType UNSIGNED_LONG_TYPE = new IntType(64, false);
     public static final FloatType FLOAT_TYPE = new FloatType(32);
     public static final FloatType DOUBLE_TYPE = new FloatType(64);
+    private final Map<String, ModuleConstant> registeredConstants;
+    private final ShamdaFunctionCompiler functionCompiler;
 
     public ShambdaCompiler(String source) {
+        registeredConstants = new HashMap<>();
         this.source = source;
+        functionCompiler = new ShamdaFunctionCompiler(this);
         generator = new ModuleGenerator();
     }
 
@@ -43,20 +49,88 @@ public class ShambdaCompiler {
         }
 
         for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
+            createMissingConstants(f);
+        }
+
+        for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
             compileFunction(f);
         }
 
         generator.end();
     }
 
+    private void createMissingConstants(ShambdaParser.FunctionDeclarationContext context) {
+        ShambdaParser.FunctionBodyContext body = context.functionBody();
+        for(ShambdaParser.StatementContext s : body.statement()) {
+            ShambdaParser.ExpressionContext expressionToCheck;
+            if(s.variableDeclaration() != null) {
+                expressionToCheck = s.variableDeclaration().variableAssignment().expression();
+            } else if(s.variableAssignment() != null) {
+                expressionToCheck = s.variableAssignment().expression();
+            } else {
+                expressionToCheck = s.expression();
+            }
+            handleMissingConstants(expressionToCheck);
+        }
+    }
+
+    private void handleMissingConstants(ShambdaParser.ExpressionContext expression) {
+        if(expression.constantExpression() != null) {
+            ShambdaParser.ConstantExpressionContext constant = expression.constantExpression();
+            String id = getConstantID(constant);
+            if( ! registeredConstants.containsKey(id)) {
+                generateConstant(id, inferType(constant), constant);
+            }
+        } else if(expression.expression() != null) {
+            handleMissingConstants(expression.expression());
+        } else if(expression.functionCall() != null) {
+            ShambdaParser.FunctionCallContext call = expression.functionCall();
+            call.expression().forEach(this::handleMissingConstants);
+        } else if(expression.dereference() != null) {
+            handleMissingConstants(expression.dereference().expression());
+        }
+    }
+
+    public String getConstantID(ShambdaParser.ConstantExpressionContext expression) {
+        if(expression.Integer() != null) {
+            return expression.Integer().getText()+":int32";
+        }
+        if(expression.LongNumber() != null) {
+            return expression.LongNumber().getText().replace("L", "")+":int64";
+        }
+        if(expression.FloatingPointNumber() != null) {
+            return expression.FloatingPointNumber().getText().replace("f", "")+":float32";
+        }
+        if(expression.DoubleNumber() != null) {
+            return expression.DoubleNumber().getText().replace("d", "")+":float64";
+        }
+
+        if(expression.UnsignedInteger() != null) {
+            return expression.UnsignedInteger().getText().replace("u", "")+":uint32";
+        }
+        if(expression.UnsignedLong() != null) {
+            return expression.UnsignedLong().getText().replace("u", "")+":uint64";
+        }
+        return null;
+    }
+
     private void compileFunction(ShambdaParser.FunctionDeclarationContext context) {
         ShambdaParser.ParameterContext signature = context.parameter().get(0);
         String name = signature.Identifier().getText();
         Type type = null;
-        if(signature.type() != null) {
+        //if(signature.type() != null) {
             type = buildType(signature.type());
+        //}
+        // TODO: type inference
+        List<ShambdaParser.ParameterContext> parameters = context.parameter();
+        Type[] paramTypes = new Type[parameters.size()-1];
+        for(int i = 1;i<parameters.size();i++) { // start at 1 because first one is the function signature
+            ShambdaParser.ParameterContext param = parameters.get(i);
+            paramTypes[i] = buildType(param.type());
         }
-        List<ShambdaParser.ParameterContext> parameters = context.parameter().subList(1, context.parameter().size());
+        ModuleFunction function = new ModuleFunction(name, new FunctionType(type, paramTypes));
+        Label startLabel = new Label();
+        functionCompiler.compile(generator.createFunction(function, startLabel), context);
     }
 
     private void compileUniform(ShambdaParser.UniformDeclarationContext context) {
@@ -90,32 +164,36 @@ public class ShambdaCompiler {
         }
 
         ShambdaParser.ConstantExpressionContext expression = context.constantExpression();
+        generateConstant(name, type, expression);
+    }
+
+    private void generateConstant(String name, Type type, ShambdaParser.ConstantExpressionContext expression) {
         long[] bitPattern = new long[0];
         Type inferredType = inferType(expression);
-        if(expression.integer() != null) {
-            int value = Integer.parseInt(expression.integer().getText());
+        if(expression.Integer() != null) {
+            int value = Integer.parseInt(expression.Integer().getText());
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL};
         }
-        if(expression.longNumber() != null) {
-            long value = Long.parseLong(expression.longNumber().integer().getText());
+        if(expression.LongNumber() != null) {
+            long value = Long.parseLong(expression.LongNumber().getText().replace("L", ""));
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL, (value >> 32) & 0x00000000FFFFFFFFL};
         }
-        if(expression.floatingPointNumber() != null) {
-            float value = Float.parseFloat(expression.floatingPointNumber().getText().replace("f", ""));
+        if(expression.FloatingPointNumber() != null) {
+            float value = Float.parseFloat(expression.FloatingPointNumber().getText().replace("f", ""));
             bitPattern = new long[]{Float.floatToRawIntBits(value) & 0x00000000FFFFFFFFL};
         }
-        if(expression.doubleNumber() != null) {
-            double v = Double.parseDouble(expression.doubleNumber().getText().replace("d", ""));
+        if(expression.DoubleNumber() != null) {
+            double v = Double.parseDouble(expression.DoubleNumber().getText().replace("d", ""));
             long value = Double.doubleToRawLongBits(v);
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL, (value >> 32) & 0x00000000FFFFFFFFL};
         }
 
-        if(expression.unsignedInteger() != null) {
-            int value = Integer.parseInt(expression.unsignedInteger().integer().getText());
+        if(expression.UnsignedInteger() != null) {
+            int value = Integer.parseInt(expression.UnsignedInteger().getText().replace("u", ""));
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL};
         }
-        if(expression.unsignedLong() != null) {
-            long value = Long.parseLong(expression.unsignedLong().longNumber().integer().getText());
+        if(expression.UnsignedLong() != null) {
+            long value = Long.parseLong(expression.UnsignedLong().getText().replace("u", "").replace("L", ""));
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL, (value >> 32) & 0x00000000FFFFFFFFL};
         }
 
@@ -124,25 +202,29 @@ public class ShambdaCompiler {
         }
 
         generator.constant(name, inferredType, bitPattern);
+
+        // register constant id
+        String constantID = getConstantID(expression);
+        registeredConstants.put(constantID, new ModuleConstant(name, inferredType, bitPattern));
     }
 
     private Type inferType(ShambdaParser.ConstantExpressionContext expression) {
-        if(expression.integer() != null) {
+        if(expression.Integer() != null) {
             return INT_TYPE;
         }
-        if(expression.longNumber() != null) {
+        if(expression.LongNumber() != null) {
             return LONG_TYPE;
         }
-        if(expression.floatingPointNumber() != null) {
+        if(expression.FloatingPointNumber() != null) {
             return FLOAT_TYPE;
         }
-        if(expression.doubleNumber() != null) {
+        if(expression.DoubleNumber() != null) {
             return DOUBLE_TYPE;
         }
-        if(expression.unsignedInteger() != null) {
+        if(expression.UnsignedInteger() != null) {
             return UNSIGNED_INT_TYPE;
         }
-        if(expression.unsignedLong() != null) {
+        if(expression.UnsignedLong() != null) {
             return UNSIGNED_LONG_TYPE;
         }
         return null; // TODO
@@ -209,7 +291,11 @@ public class ShambdaCompiler {
         return new Type(raw);
     }
 
-    private void compileError(String message) {
+    public ModuleConstant getConstant(String constantID) {
+        return registeredConstants.get(constantID);
+    }
+
+    protected void compileError(String message) {
         throw new ShamdaCompileError(message);
     }
 

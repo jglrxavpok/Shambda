@@ -15,9 +15,7 @@ import org.jglr.shambda.ShambdaCompiler;
 import org.junit.Test;
 import sun.security.provider.SHA;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -26,19 +24,29 @@ public class TestCompiler {
 
     @Test
     public void testCompiles() {
-        ShambdaCompiler compiler = new ShambdaCompiler("constant float:float32 = 42f;;\n" +
-                "constant unsigned:uint64 = u 45648705464L;;\n" +
-                "constant double:float64 = 5689.265d;;\n" +
-                "constant float_inferred = 42f;;\n" +
-                "constant unsigned_inferred = u 45648705464L;;\n" +
-                "constant double_inferred = 5689.265d;;\n" +
-                "uniform color:vec4(float32);;\n" +
-                "uniform time:float64;;\n" +
-                "uniform texture:int32*(Input);;\n" +
-                "uniform projection:mat4(vec4(float64));;");
+        ShambdaCompiler compiler = new ShambdaCompiler(readFile("test.shambda"));
         compiler.compile();
         try {
-            printContent(compiler.toBytes());
+            printContent("test", compiler.toBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String readFile(String s) {
+        InputStream input = getClass().getResourceAsStream("/" + s);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        StringBuilder builder = new StringBuilder();
+        reader.lines().forEach(l ->builder.append(l).append('\n'));
+        return builder.toString();
+    }
+
+    @Test
+    public void testDefineMissingConstants() {
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunc:vec3(float32) = vec3 1f 0f 65f;;");
+        compiler.compile();
+        try {
+            printContent("missingConstants", compiler.toBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,11 +55,11 @@ public class TestCompiler {
     @Test
     public void testConstantTypes() throws IOException {
         checkConstantType("constant float:float32 = 42f;;", ShambdaCompiler.FLOAT_TYPE);
-        checkConstantType("constant unsigned:uint64 = u 45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
+        checkConstantType("constant unsigned:uint64 = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
         checkConstantType("constant double:float64 = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
 
         checkConstantType("constant float_inferred = 42f;;", ShambdaCompiler.FLOAT_TYPE);
-        checkConstantType("constant unsigned_inferred = u 45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
+        checkConstantType("constant unsigned_inferred = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
         checkConstantType("constant double_inferred = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
     }
 
@@ -92,8 +100,8 @@ public class TestCompiler {
         assertEquals(StorageClass.UniformConstant, c.getStorageClass());
     }
 
-    private static void printContent(byte[] bytes) throws IOException {
-        FileOutputStream out = new FileOutputStream(new File(".", "test.shambda.spv"));
+    private static void printContent(String filename, byte[] bytes) throws IOException {
+        FileOutputStream out = new FileOutputStream(new File(".", filename+".shambda.spv"));
         out.write(bytes);
         out.flush();
         out.close();

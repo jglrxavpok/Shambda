@@ -15,32 +15,32 @@ functionDeclaration:
 functionBody:
     statement (SEMI_COLON statement)* DOUBLE_SEMI_COLON;
 
-integer:
-    DIGIT+;
+UnsignedInteger:
+    'u' Integer;
 
-unsignedInteger:
-    'u' integer;
+UnsignedLong:
+    'u' LongNumber;
 
-unsignedLong:
-    'u' longNumber;
+LongNumber:
+    Digits LONG_TERMINATOR;
 
-longNumber:
-    integer LONG_TERMINATOR;
+DoubleNumber:
+    Digits (PERIOD Digits)? 'd';
 
-doubleNumber:
-    integer (PERIOD integer)? 'd';
-
-floatingPointNumber:
-    integer (PERIOD integer)? FLOAT_TERMINATOR;
+FloatingPointNumber:
+    Digits (PERIOD Digits)? FLOAT_TERMINATOR;
 
 constantExpression:
-    integer | floatingPointNumber | longNumber | doubleNumber | unsignedInteger | unsignedLong;
+    Integer | FloatingPointNumber | LongNumber | DoubleNumber | UnsignedInteger | UnsignedLong;
+
+Integer:
+    Digits;
 
 expression:
     functionCall | constantExpression | dereference | Identifier | LEFT_PAREN expression RIGHT_PAREN;
 
 dereference:
-    '!' Identifier;
+    '!' expression;
 
 statement:
     expression | variableDeclaration | variableAssignment;
@@ -88,8 +88,33 @@ DOUBLE_SEMI_COLON:
 SEMI_COLON:
     ';';
 
-DIGIT:
-    ('0'..'9');
+fragment
+DecimalNumeral
+    :   '0'
+    |   NonZeroDigit (Digits? | '_'+ Digits)
+    ;
+
+fragment
+Digits
+    :   Digit (DigitOrUnderscore* Digit)?
+    ;
+
+fragment
+Digit
+    :   '0'
+    |   NonZeroDigit
+    ;
+
+fragment
+NonZeroDigit
+    :   [1-9]
+    ;
+
+fragment
+DigitOrUnderscore
+    :   Digit
+    |   '_'
+    ;
 
 PERIOD:
     '.';
