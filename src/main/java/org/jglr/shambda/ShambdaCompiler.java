@@ -2,6 +2,7 @@ package org.jglr.shambda;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jglr.sbm.StorageClass;
 import org.jglr.sbm.types.*;
@@ -12,6 +13,7 @@ import org.jglr.shambda.grammar.ShambdaParser;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ShambdaCompiler {
 
@@ -50,6 +52,15 @@ public class ShambdaCompiler {
         ShambdaParser parser = new ShambdaParser(tokens);
         ShambdaParser.FileContext file = parser.file();
         createNames(file);
+
+        for (ShambdaParser.SetImportContext s : file.setImport()) {
+            String name = s.children.subList(1, s.children.size()-1).stream()
+                    .map(ParseTree::getText)
+                    .filter(str -> !str.isEmpty())
+                    .collect(Collectors.joining());
+            generator.addSetImport(name);
+        }
+
         for (ShambdaParser.ConstantDeclarationContext c : file.constantDeclaration()) {
             compileConstant(c);
         }

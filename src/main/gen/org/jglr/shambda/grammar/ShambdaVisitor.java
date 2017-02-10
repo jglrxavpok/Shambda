@@ -1,4 +1,4 @@
-// Generated from F:/Programming/Java/Languages/Shambda/src/main/java/antlr/jambda\Shambda.g4 by ANTLR 4.6
+// Generated from F:/Programming/Java/Languages/Shambda/src/main/java/antlr/shambda\Shambda.g4 by ANTLR 4.6
 package org.jglr.shambda.grammar;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -16,6 +16,12 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFile(ShambdaParser.FileContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ShambdaParser#setImport}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSetImport(ShambdaParser.SetImportContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ShambdaParser#constantDeclaration}.
 	 * @param ctx the parse tree

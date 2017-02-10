@@ -1,4 +1,4 @@
-// Generated from F:/Programming/Java/Languages/Shambda/src/main/java/antlr/jambda\Shambda.g4 by ANTLR 4.6
+// Generated from F:/Programming/Java/Languages/Shambda/src/main/java/antlr/shambda\Shambda.g4 by ANTLR 4.6
 package org.jglr.shambda.grammar;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -23,6 +23,18 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFile(ShambdaParser.FileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSetImport(ShambdaParser.SetImportContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSetImport(ShambdaParser.SetImportContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

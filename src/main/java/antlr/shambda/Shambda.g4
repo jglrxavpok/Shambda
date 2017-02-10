@@ -4,7 +4,7 @@ file:
     (setImport | functionDeclaration | uniformDeclaration | constantDeclaration)*;
 
 setImport:
-    'import' Identifier;
+    '#import' (Identifier | Integer) ('.' (Identifier | Integer))* DOUBLE_SEMI_COLON;
 
 constantDeclaration:
     'constant' parameter EQUAL_SIGN constantExpression DOUBLE_SEMI_COLON;

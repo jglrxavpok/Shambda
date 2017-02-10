@@ -1,8 +1,5 @@
 import org.jglr.sbm.StorageClass;
-import org.jglr.sbm.instructions.ConstantInstruction;
-import org.jglr.sbm.instructions.ResultInstruction;
-import org.jglr.sbm.instructions.SpvInstruction;
-import org.jglr.sbm.instructions.VariableInstruction;
+import org.jglr.sbm.instructions.*;
 import org.jglr.sbm.types.MatrixType;
 import org.jglr.sbm.types.PointerType;
 import org.jglr.sbm.types.Type;
@@ -18,9 +15,26 @@ import sun.security.provider.SHA;
 import java.io.*;
 import java.util.Optional;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class TestCompiler {
+
+    @Test
+    public void testSetImport() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("#import GLSL.std.450;;");
+        compiler.compile();
+        ModuleReader reader = new ModuleReader(compiler.toBytes());
+        CodeCollector collector = (CodeCollector) reader.visitCode();
+        boolean match = collector.getInstructions().stream()
+                .filter(i -> i instanceof ExtendedInstructionSetImportInstruction)
+                .map(i -> (ExtendedInstructionSetImportInstruction) i)
+                .allMatch(i -> {
+                    System.out.println("> "+i.getName());
+                    return i.getName().equals("GLSL.std.450");
+                });
+        assertTrue(match);
+    }
 
     @Test
     public void testCompiles() {

@@ -1,4 +1,4 @@
-// Generated from F:/Programming/Java/Languages/Shambda/src/main/java/antlr/jambda\Shambda.g4 by ANTLR 4.6
+// Generated from F:/Programming/Java/Languages/Shambda/src/main/java/antlr/shambda\Shambda.g4 by ANTLR 4.6
 package org.jglr.shambda.grammar;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -17,6 +17,16 @@ public interface ShambdaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFile(ShambdaParser.FileContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ShambdaParser#setImport}.
+	 * @param ctx the parse tree
+	 */
+	void enterSetImport(ShambdaParser.SetImportContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ShambdaParser#setImport}.
+	 * @param ctx the parse tree
+	 */
+	void exitSetImport(ShambdaParser.SetImportContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ShambdaParser#constantDeclaration}.
 	 * @param ctx the parse tree
