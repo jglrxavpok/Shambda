@@ -27,13 +27,13 @@ public class ShambdaCompiler {
     public static final FloatType FLOAT_TYPE = new FloatType(32);
     public static final FloatType DOUBLE_TYPE = new FloatType(64);
     private final Map<String, ModuleConstant> registeredConstants;
-    private final ShamdaFunctionCompiler functionCompiler;
+    private final ShambdaFunctionCompiler functionCompiler;
     private String filename;
 
     public ShambdaCompiler(String source) {
         registeredConstants = new HashMap<>();
         this.source = source;
-        functionCompiler = new ShamdaFunctionCompiler(this);
+        functionCompiler = new ShambdaFunctionCompiler(this);
         generator = new ModuleGenerator();
         filename = "<unknown>";
     }
@@ -319,7 +319,7 @@ public class ShambdaCompiler {
     }
 
     protected void compileError(String message) {
-        throw new ShamdaCompileError(message);
+        throw new ShambdaCompileError(message);
     }
 
     public byte[] toBytes() {

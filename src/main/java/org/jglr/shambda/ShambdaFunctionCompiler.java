@@ -9,10 +9,10 @@ import org.jglr.shambda.grammar.ShambdaParser;
 
 import java.util.List;
 
-public class ShamdaFunctionCompiler {
+public class ShambdaFunctionCompiler {
     private ShambdaCompiler compiler;
 
-    public ShamdaFunctionCompiler(ShambdaCompiler compiler) {
+    public ShambdaFunctionCompiler(ShambdaCompiler compiler) {
         this.compiler = compiler;
     }
 
