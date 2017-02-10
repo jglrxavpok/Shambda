@@ -26,12 +26,22 @@ public class ShambdaCompiler {
     public static final FloatType DOUBLE_TYPE = new FloatType(64);
     private final Map<String, ModuleConstant> registeredConstants;
     private final ShamdaFunctionCompiler functionCompiler;
+    private String filename;
 
     public ShambdaCompiler(String source) {
         registeredConstants = new HashMap<>();
         this.source = source;
         functionCompiler = new ShamdaFunctionCompiler(this);
         generator = new ModuleGenerator();
+        filename = "<unknown>";
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     public void compile() {
@@ -130,6 +140,8 @@ public class ShambdaCompiler {
         }
         ModuleFunction function = new ModuleFunction(name, new FunctionType(type, paramTypes));
         Label startLabel = new Label();
+        int line = context.getStart().getLine();
+        generator.lineNumber(getFilename(), line, context.getStart().getCharPositionInLine());
         functionCompiler.compile(generator.createFunction(function, startLabel), context);
     }
 

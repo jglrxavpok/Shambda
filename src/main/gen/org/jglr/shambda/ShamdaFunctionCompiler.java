@@ -1,6 +1,5 @@
 package org.jglr.shambda;
 
-import org.jglr.sbm.types.FunctionType;
 import org.jglr.sbm.types.Type;
 import org.jglr.sbm.types.VectorType;
 import org.jglr.sbm.utils.FunctionGenerator;
@@ -52,20 +51,36 @@ public class ShamdaFunctionCompiler {
         for(int i = 0;i<parameters.size();i++) {
             arguments[i] = compileExpression(function, generator, parameters.get(i));
         }
-        if(calledName.startsWith("vec")) {
-            String width = calledName.substring("vec".length());
-            try {
-                // TODO: All arguments must be of the same type
-                int size = Integer.parseInt(width);
-                VectorType type = new VectorType(arguments[0].getType(), size);
-                return generator.compositeConstruct(type, arguments);
-            } catch (Exception e) {
-                throw e;
-            }
+        if(isStandardFunction(calledName)) {
+            return handleStandardFunction(calledName, arguments, generator);
         } else {
             //return generator.callFunction(function, arguments);
             throw new UnsupportedOperationException("not implemented yet");
         }
+    }
+
+    private boolean isStandardFunction(String calledName) {
+        if(calledName.startsWith("vec")) {
+            String width = calledName.substring("vec".length());
+            try {
+                Integer.parseInt(width);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private ModuleComponent handleStandardFunction(String calledName, ModuleComponent[] arguments, FunctionGenerator generator) {
+        if(calledName.startsWith("vec")) {
+            String width = calledName.substring("vec".length());
+            // TODO: All arguments must be of the same type
+            int size = Integer.parseInt(width);
+            VectorType type = new VectorType(arguments[0].getType(), size);
+            return generator.compositeConstruct(type, arguments);
+        }
+        return null;
     }
 
     private ModuleComponent compileExpression(ModuleFunction function, FunctionGenerator generator, ShambdaParser.ExpressionContext context) {

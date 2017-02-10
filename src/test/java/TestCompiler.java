@@ -25,6 +25,7 @@ public class TestCompiler {
     @Test
     public void testCompiles() {
         ShambdaCompiler compiler = new ShambdaCompiler(readFile("test.shambda"));
+        compiler.setFilename("test.shambda");
         compiler.compile();
         try {
             printContent("test", compiler.toBytes());
@@ -44,6 +45,7 @@ public class TestCompiler {
     @Test
     public void testDefineMissingConstants() {
         ShambdaCompiler compiler = new ShambdaCompiler("myfunc:vec3(float32) = vec3 1f 0f 65f;;");
+        compiler.setFilename("missingConstants.shambda");
         compiler.compile();
         try {
             printContent("missingConstants", compiler.toBytes());
@@ -73,6 +75,7 @@ public class TestCompiler {
 
     private void checkConstantType(String source, Type expected) throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler(source);
+        compiler.setFilename(source);
         compiler.compile();
         ModuleReader reader = new ModuleReader(compiler.toBytes());
         CodeCollector codeCollector = (CodeCollector) reader.visitCode();
@@ -87,6 +90,7 @@ public class TestCompiler {
 
     private void checkUniformType(String source, Type expected) throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler(source);
+        compiler.setFilename(source);
         compiler.compile();
         ModuleReader reader = new ModuleReader(compiler.toBytes());
         CodeCollector codeCollector = (CodeCollector) reader.visitCode();

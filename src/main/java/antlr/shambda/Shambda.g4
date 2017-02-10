@@ -1,7 +1,10 @@
 grammar Shambda;
 
 file:
-    (functionDeclaration | uniformDeclaration | constantDeclaration)*;
+    (setImport | functionDeclaration | uniformDeclaration | constantDeclaration)*;
+
+setImport:
+    'import' Identifier;
 
 constantDeclaration:
     'constant' parameter EQUAL_SIGN constantExpression DOUBLE_SEMI_COLON;
