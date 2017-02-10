@@ -92,7 +92,7 @@ In a Shambda file, you can find declarations of constants, uniforms and function
 ---
 **Stage functions:**
 
-Each shader stage is represented by a function named with the name of said stage (eg. ```fragment = vec4 1 1 1 1``` is a fragment shader returning the color white for each pixel)
+Each shader stage is represented by a function named with the name of said stage (eg. ```fragment = vec4 1 1 1 1;;``` is a fragment shader returning the color white for each pixel)
 
 Supported stage are:
 * 'fragment': Returns a vec4(float32) representing the ouput color as a RGBA float vector. Parameters are equivalent to the input in a fragment shader.
