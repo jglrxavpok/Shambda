@@ -1,7 +1,7 @@
 grammar Shambda;
 
 file:
-    (setImport | functionDeclaration | uniformDeclaration | constantDeclaration)*;
+    (setImport | functionDeclaration | uniformDeclaration | constantDeclaration)* EOF;
 
 setImport:
     '#import' (Identifier | Integer) ('.' (Identifier | Integer))* DOUBLE_SEMI_COLON;
@@ -40,7 +40,7 @@ Integer:
     Digits;
 
 expression:
-    functionCall | constantExpression | dereference | Identifier | LEFT_PAREN expression RIGHT_PAREN;
+    functionCall | constantExpression | dereference | LEFT_PAREN expression RIGHT_PAREN;
 
 dereference:
     '!' expression;

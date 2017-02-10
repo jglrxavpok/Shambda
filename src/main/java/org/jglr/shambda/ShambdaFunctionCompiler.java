@@ -1,10 +1,13 @@
 package org.jglr.shambda;
 
+import org.jglr.sbm.types.FunctionType;
+import org.jglr.sbm.types.PointerType;
 import org.jglr.sbm.types.Type;
 import org.jglr.sbm.types.VectorType;
 import org.jglr.sbm.utils.FunctionGenerator;
 import org.jglr.sbm.utils.ModuleComponent;
 import org.jglr.sbm.utils.ModuleFunction;
+import org.jglr.sbm.utils.ModuleVariable;
 import org.jglr.shambda.grammar.ShambdaParser;
 
 import java.util.List;
@@ -54,8 +57,15 @@ public class ShambdaFunctionCompiler {
         if(isStandardFunction(calledName)) {
             return handleStandardFunction(calledName, arguments, generator);
         } else {
-            //return generator.callFunction(function, arguments);
-            throw new UnsupportedOperationException("not implemented yet");
+            ModuleComponent component = compiler.getComponantWithName(calledName);
+            if(component == null)
+                compiler.compileError("Unknown symbol", context);
+            if (component.getType() instanceof FunctionType) {
+                // TODO: function call
+                throw new UnsupportedOperationException("not implemented yet");
+            } else {
+                return component;
+            }
         }
     }
 
@@ -84,10 +94,28 @@ public class ShambdaFunctionCompiler {
     }
 
     private ModuleComponent compileExpression(ModuleFunction function, FunctionGenerator generator, ShambdaParser.ExpressionContext context) {
-        // TODO
         if(context.constantExpression() != null) {
             return compiler.getConstant(compiler.getConstantID(context.constantExpression()));
         }
+        if(context.functionCall() != null) {
+            return compileFunctionCall(function, generator, context.functionCall());
+        }
+        if(context.expression() != null) { // has a sub-expression
+            return compileExpression(function, generator, context.expression());
+        }
+        if(context.dereference() != null) {
+            return compileDereference(function, generator, context.dereference());
+        }
         return null;
+    }
+
+    private ModuleComponent compileDereference(ModuleFunction function, FunctionGenerator generator, ShambdaParser.DereferenceContext context) {
+        ModuleComponent pointer = compileExpression(function, generator, context.expression());
+        if(! (pointer.getType() instanceof PointerType)) {
+            compiler.compileError("Derefencing a non-pointer type", context);
+        }
+        ModuleVariable result = new ModuleVariable("$tmp_compiledereference$", ((PointerType)pointer.getType()).getType());
+        generator.load(result, new ModuleVariable(pointer.getName(), pointer.getType()));
+        return result;
     }
 }

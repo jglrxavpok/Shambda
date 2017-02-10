@@ -4,13 +4,10 @@ import org.jglr.sbm.types.MatrixType;
 import org.jglr.sbm.types.PointerType;
 import org.jglr.sbm.types.Type;
 import org.jglr.sbm.types.VectorType;
-import org.jglr.sbm.visitors.AbstractCodeVisitor;
 import org.jglr.sbm.visitors.CodeCollector;
-import org.jglr.sbm.visitors.CodeVisitor;
 import org.jglr.sbm.visitors.ModuleReader;
 import org.jglr.shambda.ShambdaCompiler;
 import org.junit.Test;
-import sun.security.provider.SHA;
 
 import java.io.*;
 import java.util.Optional;
@@ -19,6 +16,34 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class TestCompiler {
+
+    @Test
+    public void testUseUniform() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("uniform myuniform:vec4(uint32);;\n" +
+                "myfunction:vec4(uint32) = myuniform;;");
+        compiler.compile();
+        ModuleReader reader = new ModuleReader(compiler.toBytes());
+        CodeCollector collector = (CodeCollector) reader.visitCode();
+        assertTrue("Return value was not the uniform", collector.getInstructions().stream()
+                .filter(i -> i instanceof ReturnValueInstruction)
+                .map(i -> (ReturnValueInstruction)i)
+                .allMatch(i -> i.getValueName().equals("myuniform")));
+        printContent("testUseUniform", compiler.toBytes());
+    }
+
+    @Test
+    public void testUseConstant() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("constant myconstant = 42f;;\n" +
+                "myfunction:float32 = myconstant;;");
+        compiler.compile();
+        ModuleReader reader = new ModuleReader(compiler.toBytes());
+        CodeCollector collector = (CodeCollector) reader.visitCode();
+        assertTrue("Return value was not the constant", collector.getInstructions().stream()
+                .filter(i -> i instanceof ReturnValueInstruction)
+                .map(i -> (ReturnValueInstruction)i)
+                .allMatch(i -> i.getValueName().equals("myconstant")));
+        printContent("testUseConstant", compiler.toBytes());
+    }
 
     @Test
     public void testSetImport() throws IOException {
@@ -119,7 +144,10 @@ public class TestCompiler {
     }
 
     private static void printContent(String filename, byte[] bytes) throws IOException {
-        FileOutputStream out = new FileOutputStream(new File(".", filename+".shambda.spv"));
+        File file = new File("tests/", filename + ".shambda.spv");
+        if(!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(file);
         out.write(bytes);
         out.flush();
         out.close();

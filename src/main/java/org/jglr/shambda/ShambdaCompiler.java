@@ -2,6 +2,7 @@ package org.jglr.shambda;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jglr.sbm.StorageClass;
@@ -27,11 +28,13 @@ public class ShambdaCompiler {
     public static final FloatType FLOAT_TYPE = new FloatType(32);
     public static final FloatType DOUBLE_TYPE = new FloatType(64);
     private final Map<String, ModuleConstant> registeredConstants;
+    private final Map<String, ModuleComponent> registeredComponents;
     private final ShambdaFunctionCompiler functionCompiler;
     private String filename;
 
     public ShambdaCompiler(String source) {
         registeredConstants = new HashMap<>();
+        registeredComponents = new HashMap<>();
         this.source = source;
         functionCompiler = new ShambdaFunctionCompiler(this);
         generator = new ModuleGenerator();
@@ -71,6 +74,7 @@ public class ShambdaCompiler {
 
         for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
             createMissingConstants(f);
+            registerFunction(f);
         }
 
         for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
@@ -78,6 +82,24 @@ public class ShambdaCompiler {
         }
 
         generator.end();
+    }
+
+    private void registerFunction(ShambdaParser.FunctionDeclarationContext context) {
+        ShambdaParser.ParameterContext signature = context.parameter().get(0);
+        String name = signature.Identifier().getText();
+        Type type = null;
+        //if(signature.type() != null) {
+        type = buildType(signature.type());
+        //}
+        // TODO: type inference
+        List<ShambdaParser.ParameterContext> parameters = context.parameter();
+        Type[] paramTypes = new Type[parameters.size()-1];
+        for(int i = 1;i<parameters.size();i++) { // start at 1 because first one is the function signature
+            ShambdaParser.ParameterContext param = parameters.get(i);
+            paramTypes[i] = buildType(param.type());
+        }
+        ModuleFunction function = new ModuleFunction(name, new FunctionType(type, paramTypes));
+        registeredComponents.put(name, function);
     }
 
     private void createMissingConstants(ShambdaParser.FunctionDeclarationContext context) {
@@ -138,18 +160,7 @@ public class ShambdaCompiler {
     private void compileFunction(ShambdaParser.FunctionDeclarationContext context) {
         ShambdaParser.ParameterContext signature = context.parameter().get(0);
         String name = signature.Identifier().getText();
-        Type type = null;
-        //if(signature.type() != null) {
-            type = buildType(signature.type());
-        //}
-        // TODO: type inference
-        List<ShambdaParser.ParameterContext> parameters = context.parameter();
-        Type[] paramTypes = new Type[parameters.size()-1];
-        for(int i = 1;i<parameters.size();i++) { // start at 1 because first one is the function signature
-            ShambdaParser.ParameterContext param = parameters.get(i);
-            paramTypes[i] = buildType(param.type());
-        }
-        ModuleFunction function = new ModuleFunction(name, new FunctionType(type, paramTypes));
+        ModuleFunction function = (ModuleFunction) registeredComponents.get(name);
         Label startLabel = new Label();
         int line = context.getStart().getLine();
         generator.lineNumber(getFilename(), line, context.getStart().getCharPositionInLine());
@@ -161,7 +172,9 @@ public class ShambdaCompiler {
         if(context.parameter().type() == null)
             compileError("Error while compiling uniform "+name+": uniform types cannot be inferred, the type of the uniform must follow its name");
         Type type = buildType(context.parameter().type());
-        generator.declareVariable(name, type, StorageClass.UniformConstant);
+        ModuleVariable result = generator.declareVariable(name, type, StorageClass.UniformConstant);
+
+        registeredComponents.put(name, result);
     }
 
     private void createNames(ShambdaParser.FileContext file) {
@@ -228,7 +241,10 @@ public class ShambdaCompiler {
 
         // register constant id
         String constantID = getConstantID(expression);
-        registeredConstants.put(constantID, new ModuleConstant(name, inferredType, bitPattern));
+        ModuleConstant constant = new ModuleConstant(name, inferredType, bitPattern);
+        registeredConstants.put(constantID, constant);
+
+        registeredComponents.put(name, constant);
     }
 
     private Type inferType(ShambdaParser.ConstantExpressionContext expression) {
@@ -324,5 +340,13 @@ public class ShambdaCompiler {
 
     public byte[] toBytes() {
         return generator.toBytes();
+    }
+
+    public void compileError(String message, ParserRuleContext context) {
+        throw new ShambdaCompileError(message+" in "+filename+" at line "+context.getStart().getLine()+";"+context.getStart().getCharPositionInLine());
+    }
+
+    public ModuleComponent getComponantWithName(String name) {
+        return registeredComponents.get(name);
     }
 }
