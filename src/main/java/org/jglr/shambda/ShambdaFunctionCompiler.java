@@ -1,10 +1,7 @@
 package org.jglr.shambda;
 
 import org.jglr.sbm.types.*;
-import org.jglr.sbm.utils.FunctionGenerator;
-import org.jglr.sbm.utils.ModuleComponent;
-import org.jglr.sbm.utils.ModuleFunction;
-import org.jglr.sbm.utils.ModuleVariable;
+import org.jglr.sbm.utils.*;
 import org.jglr.shambda.grammar.ShambdaParser;
 
 import java.util.HashMap;
@@ -27,6 +24,7 @@ public class ShambdaFunctionCompiler {
             parameters.put(parameter.getName(), parameter);
             generator.parameter(parameter);
         }
+        generator.label(new Label());
         ModuleFunction function = generator.getFunction();
         ShambdaParser.FunctionBodyContext body = context.functionBody();
         List<ShambdaParser.StatementContext> statements = body.statement();

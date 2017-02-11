@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.jglr.sbm.StorageClass;
+import org.jglr.sbm.*;
 import org.jglr.sbm.sampler.Dimensionality;
 import org.jglr.sbm.sampler.ImageDepth;
 import org.jglr.sbm.sampler.ImageFormat;
@@ -15,6 +15,7 @@ import org.jglr.sbm.utils.*;
 import org.jglr.shambda.grammar.ShambdaLexer;
 import org.jglr.shambda.grammar.ShambdaParser;
 
+import java.beans.IndexedPropertyChangeEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,12 @@ public class ShambdaCompiler {
     }
 
     public void compile() {
+        generator.addCapability(Capability.Shader)
+                .setMemoryModel(AddressingModel.Logical, MemoryModel.GLSL450);
+        generator.addSourceExtension("GL_ARB_separate_shader_objects");
+        generator.addSourceExtension("GL_ARB_shading_language_420pack");
+
+
         ShambdaLexer lexer = new ShambdaLexer(new ANTLRInputStream(source));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         ShambdaParser parser = new ShambdaParser(tokens);
@@ -87,11 +94,51 @@ public class ShambdaCompiler {
             registerFunction(f);
         }
 
+        generateEntryPoints(file.functionDeclaration());
+
         for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
             compileFunction(f);
         }
 
         generator.end();
+    }
+
+    private void generateEntryPoints(List<ShambdaParser.FunctionDeclarationContext> contexts) {
+        for(ShambdaParser.FunctionDeclarationContext c : contexts) {
+            String name = c.parameter(0).Identifier().getText();
+            if(name.equals("fragment")) {
+                ModuleFunction function = (ModuleFunction) getComponantWithName("fragment");
+                createEntryPoint(ExecutionModel.Fragment, function);
+            }
+            // TODO: other stages
+        }
+    }
+
+    private void createEntryPoint(ExecutionModel model, ModuleFunction function) {
+        // Assumptions for the moment: everything input is a pointer and there are no discontinuities in layout locations
+        FunctionType funcType = (FunctionType) function.getFunctionType();
+        Type[] paramTypes = funcType.getParameters();
+        ModuleVariable[] interfaces = new ModuleVariable[paramTypes.length+1];
+        for (int i = 0; i < paramTypes.length; i++) {
+            Type interfaceType = new PointerType(StorageClass.Input, paramTypes[i]);
+            interfaces[i] = generator.declareVariable("layout"+i, interfaceType, StorageClass.Input);
+        }
+        interfaces[interfaces.length-1] = generator.declareVariable("output", new PointerType(StorageClass.Output, funcType.getReturnType()), StorageClass.Output);
+        FunctionType functionType = new FunctionType(Type.VOID);
+        ModuleFunction mainFunction = new ModuleFunction("$mainFragment", functionType);
+        generator.addNamedEntryPoint("main", mainFunction, model, interfaces);
+        FunctionGenerator func = generator.createFunction(mainFunction);
+        func.label(new Label());
+
+        ModuleVariable[] interfaceValues = new ModuleVariable[interfaces.length-1];
+        for (int i = 0; i < interfaceValues.length; i++) {
+            interfaceValues[i] = new ModuleVariable("$interfaceValue"+i, paramTypes[i]);
+            func.load(interfaceValues[i], interfaces[i]);
+        }
+        ModuleVariable funcResult = func.callFunction(function, interfaceValues);
+        func.store(funcResult, interfaces[interfaces.length-1]);
+        func.returnVoid();
+        func.end();
     }
 
     private void registerFunction(ShambdaParser.FunctionDeclarationContext context) {
@@ -180,10 +227,9 @@ public class ShambdaCompiler {
         ShambdaParser.ParameterContext signature = context.parameter().get(0);
         String name = signature.Identifier().getText();
         ModuleFunction function = (ModuleFunction) registeredComponents.get(name);
-        Label startLabel = new Label();
         int line = context.getStart().getLine();
         generator.lineNumber(getFilename(), line, context.getStart().getCharPositionInLine());
-        functionCompiler.compile(generator.createFunction(function, startLabel), context);
+        functionCompiler.compile(generator.createFunction(function), context);
     }
 
     private void compileUniform(ShambdaParser.UniformDeclarationContext context) {

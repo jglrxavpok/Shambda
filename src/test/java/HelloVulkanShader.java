@@ -8,6 +8,7 @@ import org.jglr.sbm.sampler.*;
 import org.jglr.sbm.types.*;
 import org.jglr.sbm.utils.*;
 import org.jglr.sbm.visitors.*;
+import org.jglr.shambda.ShambdaCompiler;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,9 +27,13 @@ public class HelloVulkanShader {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        ModuleGenerator writer = new ModuleGenerator();
+        /*ModuleGenerator writer = new ModuleGenerator();
         writeUsualShaderWithGenerator(writer);
-        return writer.toBytes();
+        return writer.toBytes();*/
+        ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D*(Input);;\n" +
+                "fragment:vec4(float32) texCoords:vec2(float32) = vec4(1f 0f 1f 1f);;");
+        compiler.compile();
+        return compiler.toBytes();
     }
 
     private static void writeWhiteShaderWithGenerator(ModuleGenerator writer) {
@@ -46,7 +51,8 @@ public class HelloVulkanShader {
         ModuleConstant float1 = writer.constantFloat("1f", floatType, 1f);
         ModuleConstant whiteColor = writer.constantComposite("vec4(1,1,1,1)", vec4Float32, float1, float1, float1, float1);
         ModuleVariable finalColor = writer.declareVariable("finalColor", vec4Pointer, StorageClass.Output);
-        writer.createFunction(mainFunction, new Label())
+        writer.createFunction(mainFunction)
+                .label(new Label())
                 .store(whiteColor, finalColor)
                 .returnVoid()
                 .end();
@@ -96,7 +102,7 @@ public class HelloVulkanShader {
         ModuleVariable texture = writer.declareVariable("texture", sampledImageTypePointer, StorageClass.UniformConstant);
         ModuleVariable texCoords = writer.declareVariable("texCoords", vec2Pointer, StorageClass.Input);
         ModuleVariable finalColor = writer.declareVariable("finalColor", vec4Pointer, StorageClass.Output);
-        FunctionGenerator functionWriter = writer.createFunction(mainFunction, new Label());
+        FunctionGenerator functionWriter = writer.createFunction(mainFunction).label(new Label());
 
         ModuleVariable loadedTexture = new ModuleVariable("loadedTexture", sampledImageType);
         ModuleVariable position = new ModuleVariable("position", vec2Float32);
