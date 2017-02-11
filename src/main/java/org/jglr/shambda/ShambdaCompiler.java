@@ -31,6 +31,7 @@ public class ShambdaCompiler {
     private final Map<String, ModuleConstant> registeredConstants;
     private final Map<String, ModuleComponent> registeredComponents;
     private final ShambdaFunctionCompiler functionCompiler;
+    private final ShambdaTypeInferer typeInferer;
     private String filename;
 
     public ShambdaCompiler(String source) {
@@ -40,6 +41,7 @@ public class ShambdaCompiler {
         functionCompiler = new ShambdaFunctionCompiler(this);
         generator = new ModuleGenerator();
         filename = "<unknown>";
+        typeInferer = new ShambdaTypeInferer(this);
     }
 
     public String getFilename() {
@@ -88,18 +90,24 @@ public class ShambdaCompiler {
     private void registerFunction(ShambdaParser.FunctionDeclarationContext context) {
         ShambdaParser.ParameterContext signature = context.parameter().get(0);
         String name = signature.Identifier().getText();
-        Type type = null;
-        //if(signature.type() != null) {
-        type = buildType(signature.type());
-        //}
-        // TODO: type inference
+        Type returnType = null;
+        if(signature.type() != null) {
+            returnType = buildType(signature.type());
+        }
         List<ShambdaParser.ParameterContext> parameters = context.parameter();
         Type[] paramTypes = new Type[parameters.size()-1];
         for(int i = 1;i<parameters.size();i++) { // start at 1 because first one is the function signature
             ShambdaParser.ParameterContext param = parameters.get(i);
             paramTypes[i] = buildType(param.type());
         }
-        ModuleFunction function = new ModuleFunction(name, new FunctionType(type, paramTypes));
+
+        FunctionType functionType = new FunctionType(returnType, paramTypes);
+/* TODO
+        FunctionType inferredType = typeInferer.inferFunctionType(context, parameters.subList(1, parameters.size()));
+        if( ! inferredType.equals(functionType)) {
+            compileError("Function type and inferred type do not match", context);
+        }*/
+        ModuleFunction function = new ModuleFunction(name, functionType);
         registeredComponents.put(name, function);
     }
 
@@ -123,7 +131,7 @@ public class ShambdaCompiler {
             ShambdaParser.ConstantExpressionContext constant = expression.constantExpression();
             String id = getConstantID(constant);
             if( ! registeredConstants.containsKey(id)) {
-                generateConstant(id, inferType(constant), constant);
+                generateConstant(id, typeInferer.inferType(constant), constant);
             }
         } else if(expression.expression() != null) {
             handleMissingConstants(expression.expression());
@@ -209,7 +217,7 @@ public class ShambdaCompiler {
 
     private void generateConstant(String name, Type type, ShambdaParser.ConstantExpressionContext expression) {
         long[] bitPattern = new long[0];
-        Type inferredType = inferType(expression);
+        Type inferredType = typeInferer.inferType(expression);
         if(type != null && !type.equals(inferredType)) {
             compileError("Explicit and inferred types differ, explicit: "+type+" / inferred: "+inferredType);
         }
@@ -253,31 +261,6 @@ public class ShambdaCompiler {
         registeredConstants.put(constantID, constant);
 
         registeredComponents.put(name, constant);
-    }
-
-    private Type inferType(ShambdaParser.ConstantExpressionContext expression) {
-        if(expression.Integer() != null) {
-            return INT_TYPE;
-        }
-        if(expression.LongNumber() != null) {
-            return LONG_TYPE;
-        }
-        if(expression.FloatingPointNumber() != null) {
-            return FLOAT_TYPE;
-        }
-        if(expression.DoubleNumber() != null) {
-            return DOUBLE_TYPE;
-        }
-        if(expression.UnsignedInteger() != null) {
-            return UNSIGNED_INT_TYPE;
-        }
-        if(expression.UnsignedLong() != null) {
-            return UNSIGNED_LONG_TYPE;
-        }
-        if(expression.Boolean() != null) {
-            return BOOL_TYPE;
-        }
-        return null; // TODO
     }
 
     private Type buildType(ShambdaParser.TypeContext context) {
