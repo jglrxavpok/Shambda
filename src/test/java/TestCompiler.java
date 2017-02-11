@@ -18,6 +18,15 @@ import static org.junit.Assert.assertEquals;
 public class TestCompiler {
 
     @Test
+    public void testUseMultipleConstants() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("constant ac = 2;;\n" +
+                "constant ad = 45;;\n" +
+                "func:vec2(int32) = vec2 ac ad;;");
+        compiler.compile();
+        printContent("testUseMultipleConstants", compiler.toBytes());
+    }
+
+    @Test
     public void testUseUniform() throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler("uniform myuniform:vec4(uint32);;\n" +
                 "myfunction:vec4(uint32) = myuniform;;");
@@ -98,10 +107,14 @@ public class TestCompiler {
         checkConstantType("constant float:float32 = 42f;;", ShambdaCompiler.FLOAT_TYPE);
         checkConstantType("constant unsigned:uint64 = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
         checkConstantType("constant double:float64 = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
+        checkConstantType("constant true_boolean:bool = true;;", ShambdaCompiler.BOOL_TYPE);
+        checkConstantType("constant false_boolean:bool = false;;", ShambdaCompiler.BOOL_TYPE);
 
         checkConstantType("constant float_inferred = 42f;;", ShambdaCompiler.FLOAT_TYPE);
         checkConstantType("constant unsigned_inferred = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
         checkConstantType("constant double_inferred = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
+        checkConstantType("constant true_boolean_inferred = true;;", ShambdaCompiler.BOOL_TYPE);
+        checkConstantType("constant false_boolean_inferred = false;;", ShambdaCompiler.BOOL_TYPE);
     }
 
     @Test
@@ -118,13 +131,24 @@ public class TestCompiler {
         compiler.compile();
         ModuleReader reader = new ModuleReader(compiler.toBytes());
         CodeCollector codeCollector = (CodeCollector) reader.visitCode();
-        Optional<SpvInstruction> constantInstruction = codeCollector.getInstructions().stream()
-                .filter(i -> i instanceof ConstantInstruction)
-                .findFirst();
-        if( ! constantInstruction.isPresent())
-            throw new RuntimeException("No constant instruction found");
-        ConstantInstruction c = (ConstantInstruction) constantInstruction.get();
-        assertEquals(expected, c.getType());
+        if(expected.equals(ShambdaCompiler.BOOL_TYPE)) {
+            Optional<SpvInstruction> constantInstruction = codeCollector.getInstructions().stream()
+                    .filter(i -> i instanceof BooleanConstantInstruction)
+                    .findFirst();
+            if( ! constantInstruction.isPresent())
+                throw new RuntimeException("No constant instruction found");
+            BooleanConstantInstruction c = (BooleanConstantInstruction) constantInstruction.get();
+            assertEquals(expected, c.getType());
+        } else {
+            Optional<SpvInstruction> constantInstruction = codeCollector.getInstructions().stream()
+                    .filter(i -> i instanceof ConstantInstruction)
+                    .findFirst();
+            if( ! constantInstruction.isPresent())
+                throw new RuntimeException("No constant instruction found");
+            ConstantInstruction c = (ConstantInstruction) constantInstruction.get();
+            assertEquals(expected, c.getType());
+        }
+        printContent("Test constant "+expected.getName(), compiler.toBytes());
     }
 
     private void checkUniformType(String source, Type expected) throws IOException {
@@ -141,6 +165,7 @@ public class TestCompiler {
         VariableInstruction c = (VariableInstruction) constantInstruction.get();
         assertEquals(expected, c.getResultType());
         assertEquals(StorageClass.UniformConstant, c.getStorageClass());
+        printContent("Test uniform "+expected.getName().replace("*", "(Pointer)"), compiler.toBytes());
     }
 
     private static void printContent(String filename, byte[] bytes) throws IOException {

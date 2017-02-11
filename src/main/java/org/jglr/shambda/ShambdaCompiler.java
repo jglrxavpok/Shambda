@@ -21,6 +21,7 @@ public class ShambdaCompiler {
     private final String source;
     private final ModuleGenerator generator;
 
+    public static final Type BOOL_TYPE = Type.BOOL;
     public static final IntType INT_TYPE = new IntType(32, true);
     public static final IntType UNSIGNED_INT_TYPE = new IntType(32, false);
     public static final IntType LONG_TYPE = new IntType(64, true);
@@ -154,6 +155,9 @@ public class ShambdaCompiler {
         if(expression.UnsignedLong() != null) {
             return expression.UnsignedLong().getText().replace("u", "")+":uint64";
         }
+        if(expression.Boolean() != null) {
+            return expression.Boolean().getText()+":bool";
+        }
         return null;
     }
 
@@ -206,6 +210,17 @@ public class ShambdaCompiler {
     private void generateConstant(String name, Type type, ShambdaParser.ConstantExpressionContext expression) {
         long[] bitPattern = new long[0];
         Type inferredType = inferType(expression);
+        if(type != null && !type.equals(inferredType)) {
+            compileError("Explicit and inferred types differ, explicit: "+type+" / inferred: "+inferredType);
+        }
+        if(inferredType != null && inferredType.equals(BOOL_TYPE)) {
+            String constantID = getConstantID(expression);
+            ModuleConstant constant = generator.constantBool(name, expression.Boolean().getText().equals("true"));
+            registeredConstants.put(constantID, constant);
+
+            registeredComponents.put(name, constant);
+            return;
+        }
         if(expression.Integer() != null) {
             int value = Integer.parseInt(expression.Integer().getText());
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL};
@@ -232,16 +247,9 @@ public class ShambdaCompiler {
             long value = Long.parseLong(expression.UnsignedLong().getText().replace("u", "").replace("L", ""));
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL, (value >> 32) & 0x00000000FFFFFFFFL};
         }
-
-        if(type != null && !type.equals(inferredType)) {
-            compileError("Explicit and inferred types differ, explicit: "+type+" / inferred: "+inferredType);
-        }
-
-        generator.constant(name, inferredType, bitPattern);
-
         // register constant id
         String constantID = getConstantID(expression);
-        ModuleConstant constant = new ModuleConstant(name, inferredType, bitPattern);
+        ModuleConstant constant = generator.constant(name, inferredType, bitPattern);
         registeredConstants.put(constantID, constant);
 
         registeredComponents.put(name, constant);
@@ -265,6 +273,9 @@ public class ShambdaCompiler {
         }
         if(expression.UnsignedLong() != null) {
             return UNSIGNED_LONG_TYPE;
+        }
+        if(expression.Boolean() != null) {
+            return BOOL_TYPE;
         }
         return null; // TODO
     }

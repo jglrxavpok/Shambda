@@ -33,8 +33,11 @@ DoubleNumber:
 FloatingPointNumber:
     Digits (PERIOD Digits)? FLOAT_TERMINATOR;
 
+Boolean:
+    'true' | 'false';
+
 constantExpression:
-    Integer | FloatingPointNumber | LongNumber | DoubleNumber | UnsignedInteger | UnsignedLong;
+    Integer | FloatingPointNumber | LongNumber | DoubleNumber | UnsignedInteger | UnsignedLong | Boolean;
 
 Integer:
     Digits;

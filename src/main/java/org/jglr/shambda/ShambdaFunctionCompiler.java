@@ -64,6 +64,7 @@ public class ShambdaFunctionCompiler {
                 // TODO: function call
                 throw new UnsupportedOperationException("not implemented yet");
             } else {
+
                 return component;
             }
         }

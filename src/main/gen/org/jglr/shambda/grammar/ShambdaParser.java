@@ -20,11 +20,11 @@ public class ShambdaParser extends Parser {
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		UnsignedInteger=18, UnsignedLong=19, LongNumber=20, DoubleNumber=21, FloatingPointNumber=22, 
-		Integer=23, FLOAT_TERMINATOR=24, LONG_TERMINATOR=25, DOUBLE_SEMI_COLON=26, 
-		SEMI_COLON=27, PERIOD=28, PLUS=29, MINUS=30, MULTIPLY=31, DIVISION=32, 
-		COLON=33, LEFT_PAREN=34, RIGHT_PAREN=35, SMALL_ARROW=36, ASSIGN_SIGN=37, 
-		EQUAL_SIGN=38, LOWERCASE_LETTER=39, UPPERCASE_LETTER=40, STAR=41, WHITESPACE=42, 
-		Identifier=43;
+		Boolean=23, Integer=24, FLOAT_TERMINATOR=25, LONG_TERMINATOR=26, DOUBLE_SEMI_COLON=27, 
+		SEMI_COLON=28, PERIOD=29, PLUS=30, MINUS=31, MULTIPLY=32, DIVISION=33, 
+		COLON=34, LEFT_PAREN=35, RIGHT_PAREN=36, SMALL_ARROW=37, ASSIGN_SIGN=38, 
+		EQUAL_SIGN=39, LOWERCASE_LETTER=40, UPPERCASE_LETTER=41, STAR=42, WHITESPACE=43, 
+		Identifier=44;
 	public static final int
 		RULE_file = 0, RULE_setImport = 1, RULE_constantDeclaration = 2, RULE_uniformDeclaration = 3, 
 		RULE_functionDeclaration = 4, RULE_functionBody = 5, RULE_constantExpression = 6, 
@@ -42,18 +42,18 @@ public class ShambdaParser extends Parser {
 		null, "'#import'", "'constant'", "'uniform'", "'!'", "'let'", "'UniformConstant'", 
 		"'Input'", "'Uniform'", "'Output'", "'Workgroup'", "'CrossWorkgroup'", 
 		"'Private'", "'Function'", "'Generic'", "'PushConstant'", "'AtomicCounter'", 
-		"'Image'", null, null, null, null, null, null, "'f'", "'L'", "';;'", "';'", 
-		"'.'", "'+'", "'-'", "'*'", "'/'", "':'", "'('", "')'", "'->'", "':='", 
-		"'='"
+		"'Image'", null, null, null, null, null, null, null, "'f'", "'L'", "';;'", 
+		"';'", "'.'", "'+'", "'-'", "'*'", "'/'", "':'", "'('", "')'", "'->'", 
+		"':='", "'='"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, "UnsignedInteger", "UnsignedLong", 
-		"LongNumber", "DoubleNumber", "FloatingPointNumber", "Integer", "FLOAT_TERMINATOR", 
-		"LONG_TERMINATOR", "DOUBLE_SEMI_COLON", "SEMI_COLON", "PERIOD", "PLUS", 
-		"MINUS", "MULTIPLY", "DIVISION", "COLON", "LEFT_PAREN", "RIGHT_PAREN", 
-		"SMALL_ARROW", "ASSIGN_SIGN", "EQUAL_SIGN", "LOWERCASE_LETTER", "UPPERCASE_LETTER", 
-		"STAR", "WHITESPACE", "Identifier"
+		"LongNumber", "DoubleNumber", "FloatingPointNumber", "Boolean", "Integer", 
+		"FLOAT_TERMINATOR", "LONG_TERMINATOR", "DOUBLE_SEMI_COLON", "SEMI_COLON", 
+		"PERIOD", "PLUS", "MINUS", "MULTIPLY", "DIVISION", "COLON", "LEFT_PAREN", 
+		"RIGHT_PAREN", "SMALL_ARROW", "ASSIGN_SIGN", "EQUAL_SIGN", "LOWERCASE_LETTER", 
+		"UPPERCASE_LETTER", "STAR", "WHITESPACE", "Identifier"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -552,6 +552,7 @@ public class ShambdaParser extends Parser {
 		public TerminalNode DoubleNumber() { return getToken(ShambdaParser.DoubleNumber, 0); }
 		public TerminalNode UnsignedInteger() { return getToken(ShambdaParser.UnsignedInteger, 0); }
 		public TerminalNode UnsignedLong() { return getToken(ShambdaParser.UnsignedLong, 0); }
+		public TerminalNode Boolean() { return getToken(ShambdaParser.Boolean, 0); }
 		public ConstantExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -580,7 +581,7 @@ public class ShambdaParser extends Parser {
 			{
 			setState(84);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << UnsignedInteger) | (1L << UnsignedLong) | (1L << LongNumber) | (1L << DoubleNumber) | (1L << FloatingPointNumber) | (1L << Integer))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << UnsignedInteger) | (1L << UnsignedLong) | (1L << LongNumber) | (1L << DoubleNumber) | (1L << FloatingPointNumber) | (1L << Boolean) | (1L << Integer))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -654,6 +655,7 @@ public class ShambdaParser extends Parser {
 			case LongNumber:
 			case DoubleNumber:
 			case FloatingPointNumber:
+			case Boolean:
 			case Integer:
 				enterOuterAlt(_localctx, 2);
 				{
@@ -1206,7 +1208,7 @@ public class ShambdaParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3-\u0093\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3.\u0093\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2\3"+
 		"\2\3\2\7\2\'\n\2\f\2\16\2*\13\2\3\2\3\2\3\3\3\3\3\3\3\3\7\3\62\n\3\f\3"+
@@ -1217,32 +1219,32 @@ public class ShambdaParser extends Parser {
 		"\16\f\16\16\16v\13\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\177\n\17"+
 		"\3\17\3\17\3\17\3\17\3\17\3\17\7\17\u0087\n\17\f\17\16\17\u008a\13\17"+
 		"\3\20\3\20\3\21\3\21\3\21\5\21\u0091\n\21\3\21\2\3\34\22\2\4\6\b\n\f\16"+
-		"\20\22\24\26\30\32\34\36 \2\5\4\2\31\31--\3\2\24\31\3\2\b\23\u0092\2("+
+		"\20\22\24\26\30\32\34\36 \2\5\4\2\32\32..\3\2\24\32\3\2\b\23\u0092\2("+
 		"\3\2\2\2\4-\3\2\2\2\68\3\2\2\2\b>\3\2\2\2\nB\3\2\2\2\fL\3\2\2\2\16V\3"+
 		"\2\2\2\20_\3\2\2\2\22a\3\2\2\2\24g\3\2\2\2\26i\3\2\2\2\30m\3\2\2\2\32"+
 		"p\3\2\2\2\34~\3\2\2\2\36\u008b\3\2\2\2 \u008d\3\2\2\2\"\'\5\4\3\2#\'\5"+
 		"\n\6\2$\'\5\b\5\2%\'\5\6\4\2&\"\3\2\2\2&#\3\2\2\2&$\3\2\2\2&%\3\2\2\2"+
 		"\'*\3\2\2\2(&\3\2\2\2()\3\2\2\2)+\3\2\2\2*(\3\2\2\2+,\7\2\2\3,\3\3\2\2"+
-		"\2-.\7\3\2\2.\63\t\2\2\2/\60\7\36\2\2\60\62\t\2\2\2\61/\3\2\2\2\62\65"+
+		"\2-.\7\3\2\2.\63\t\2\2\2/\60\7\37\2\2\60\62\t\2\2\2\61/\3\2\2\2\62\65"+
 		"\3\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\66\3\2\2\2\65\63\3\2\2\2\66\67"+
-		"\7\34\2\2\67\5\3\2\2\289\7\4\2\29:\5 \21\2:;\7(\2\2;<\5\16\b\2<=\7\34"+
-		"\2\2=\7\3\2\2\2>?\7\5\2\2?@\5 \21\2@A\7\34\2\2A\t\3\2\2\2BF\5 \21\2CE"+
+		"\7\35\2\2\67\5\3\2\2\289\7\4\2\29:\5 \21\2:;\7)\2\2;<\5\16\b\2<=\7\35"+
+		"\2\2=\7\3\2\2\2>?\7\5\2\2?@\5 \21\2@A\7\35\2\2A\t\3\2\2\2BF\5 \21\2CE"+
 		"\5 \21\2DC\3\2\2\2EH\3\2\2\2FD\3\2\2\2FG\3\2\2\2GI\3\2\2\2HF\3\2\2\2I"+
-		"J\7(\2\2JK\5\f\7\2K\13\3\2\2\2LQ\5\24\13\2MN\7\35\2\2NP\5\24\13\2OM\3"+
-		"\2\2\2PS\3\2\2\2QO\3\2\2\2QR\3\2\2\2RT\3\2\2\2SQ\3\2\2\2TU\7\34\2\2U\r"+
+		"J\7)\2\2JK\5\f\7\2K\13\3\2\2\2LQ\5\24\13\2MN\7\36\2\2NP\5\24\13\2OM\3"+
+		"\2\2\2PS\3\2\2\2QO\3\2\2\2QR\3\2\2\2RT\3\2\2\2SQ\3\2\2\2TU\7\35\2\2U\r"+
 		"\3\2\2\2VW\t\3\2\2W\17\3\2\2\2X`\5\32\16\2Y`\5\16\b\2Z`\5\22\n\2[\\\7"+
-		"$\2\2\\]\5\20\t\2]^\7%\2\2^`\3\2\2\2_X\3\2\2\2_Y\3\2\2\2_Z\3\2\2\2_[\3"+
+		"%\2\2\\]\5\20\t\2]^\7&\2\2^`\3\2\2\2_X\3\2\2\2_Y\3\2\2\2_Z\3\2\2\2_[\3"+
 		"\2\2\2`\21\3\2\2\2ab\7\6\2\2bc\5\20\t\2c\23\3\2\2\2dh\5\20\t\2eh\5\30"+
 		"\r\2fh\5\26\f\2gd\3\2\2\2ge\3\2\2\2gf\3\2\2\2h\25\3\2\2\2ij\5 \21\2jk"+
-		"\7\'\2\2kl\5\20\t\2l\27\3\2\2\2mn\7\7\2\2no\5\26\f\2o\31\3\2\2\2pt\7-"+
-		"\2\2qs\5\20\t\2rq\3\2\2\2sv\3\2\2\2tr\3\2\2\2tu\3\2\2\2u\33\3\2\2\2vt"+
-		"\3\2\2\2wx\b\17\1\2x\177\7-\2\2yz\7-\2\2z{\7$\2\2{|\5\34\17\2|}\7%\2\2"+
-		"}\177\3\2\2\2~w\3\2\2\2~y\3\2\2\2\177\u0088\3\2\2\2\u0080\u0081\f\3\2"+
-		"\2\u0081\u0082\7!\2\2\u0082\u0083\7$\2\2\u0083\u0084\5\36\20\2\u0084\u0085"+
-		"\7%\2\2\u0085\u0087\3\2\2\2\u0086\u0080\3\2\2\2\u0087\u008a\3\2\2\2\u0088"+
+		"\7(\2\2kl\5\20\t\2l\27\3\2\2\2mn\7\7\2\2no\5\26\f\2o\31\3\2\2\2pt\7.\2"+
+		"\2qs\5\20\t\2rq\3\2\2\2sv\3\2\2\2tr\3\2\2\2tu\3\2\2\2u\33\3\2\2\2vt\3"+
+		"\2\2\2wx\b\17\1\2x\177\7.\2\2yz\7.\2\2z{\7%\2\2{|\5\34\17\2|}\7&\2\2}"+
+		"\177\3\2\2\2~w\3\2\2\2~y\3\2\2\2\177\u0088\3\2\2\2\u0080\u0081\f\3\2\2"+
+		"\u0081\u0082\7\"\2\2\u0082\u0083\7%\2\2\u0083\u0084\5\36\20\2\u0084\u0085"+
+		"\7&\2\2\u0085\u0087\3\2\2\2\u0086\u0080\3\2\2\2\u0087\u008a\3\2\2\2\u0088"+
 		"\u0086\3\2\2\2\u0088\u0089\3\2\2\2\u0089\35\3\2\2\2\u008a\u0088\3\2\2"+
-		"\2\u008b\u008c\t\4\2\2\u008c\37\3\2\2\2\u008d\u0090\7-\2\2\u008e\u008f"+
-		"\7#\2\2\u008f\u0091\5\34\17\2\u0090\u008e\3\2\2\2\u0090\u0091\3\2\2\2"+
+		"\2\u008b\u008c\t\4\2\2\u008c\37\3\2\2\2\u008d\u0090\7.\2\2\u008e\u008f"+
+		"\7$\2\2\u008f\u0091\5\34\17\2\u0090\u008e\3\2\2\2\u0090\u0091\3\2\2\2"+
 		"\u0091!\3\2\2\2\r&(\63FQ_gt~\u0088\u0090";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
