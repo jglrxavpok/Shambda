@@ -43,7 +43,7 @@ Integer:
     Digits;
 
 expression:
-    functionCall | constantExpression | dereference | LEFT_PAREN expression RIGHT_PAREN;
+    functionCall | constantExpression | Identifier | dereference | LEFT_PAREN expression RIGHT_PAREN;
 
 dereference:
     '!' expression;
@@ -58,7 +58,7 @@ variableDeclaration:
     'let' variableAssignment;
 
 functionCall:
-    Identifier (expression)*;
+    Identifier LEFT_PAREN (expression)* RIGHT_PAREN;
 
 type:
       Identifier

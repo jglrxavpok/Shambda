@@ -28,9 +28,7 @@ public class ShambdaFunctionCompiler {
             ShambdaParser.StatementContext statement = statements.get(i);
             if(statement.expression() != null) {
                 ShambdaParser.ExpressionContext expression = statement.expression();
-                if(expression.functionCall() != null) {
-                    lastValue = compileFunctionCall(function, generator, expression.functionCall());
-                }
+                lastValue = compileExpression(function, generator, expression);
             }
             // TODO: variable assignment
         }
@@ -106,6 +104,10 @@ public class ShambdaFunctionCompiler {
         }
         if(context.dereference() != null) {
             return compileDereference(function, generator, context.dereference());
+        }
+        if(context.Identifier() != null) {
+            System.out.println("id: "+context.Identifier().getText());
+            return compiler.getComponantWithName(context.Identifier().getText());
         }
         return null;
     }

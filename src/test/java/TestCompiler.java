@@ -21,7 +21,7 @@ public class TestCompiler {
     public void testUseMultipleConstants() throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler("constant ac = 2;;\n" +
                 "constant ad = 45;;\n" +
-                "func:vec2(int32) = vec2 ac ad;;");
+                "func:vec2(int32) = vec2(ac ad);;");
         compiler.compile();
         printContent("testUseMultipleConstants", compiler.toBytes());
     }
@@ -92,7 +92,7 @@ public class TestCompiler {
 
     @Test
     public void testDefineMissingConstants() {
-        ShambdaCompiler compiler = new ShambdaCompiler("myfunc:vec3(float32) = vec3 1f 0f 65f;;");
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunc:vec3(float32) = vec3(1f 0f 65f);;");
         compiler.setFilename("missingConstants.shambda");
         compiler.compile();
         try {

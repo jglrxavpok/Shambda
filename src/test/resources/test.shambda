@@ -8,3 +8,5 @@ uniform color:vec4(float32);;
 uniform time:float64;;
 uniform texture:int32*(Input);;
 uniform projection:mat4(vec4(float64));;
+
+myfunc:vec2(float32) = vec2(float 3.14f);;
