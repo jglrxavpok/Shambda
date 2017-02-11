@@ -18,6 +18,14 @@ import static org.junit.Assert.assertEquals;
 public class TestCompiler {
 
     @Test
+    public void testFragmentShader() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D*(Input);;\n" +
+                "fragment:vec4(float32) texCoords:vec2(float32)*(Input) = sample(!texture !texCoords);;");
+        compiler.compile();
+        printContent("testFragmentShader", compiler.toBytes());
+    }
+
+    @Test
     public void testUseMultipleConstants() throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler("constant ac = 2;;\n" +
                 "constant ad = 45;;\n" +

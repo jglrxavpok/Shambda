@@ -33,7 +33,7 @@ public class ShambdaCompiler {
     public static final IntType UNSIGNED_LONG_TYPE = new IntType(64, false);
     public static final FloatType FLOAT_TYPE = new FloatType(32);
     public static final FloatType DOUBLE_TYPE = new FloatType(64);
-    public static final Type TEXTURE_IMAGE_TYPE = new ImageType(FLOAT_TYPE, Dimensionality.Dim2D, ImageDepth.NO_DEPTH, false, false, Sampling.WITH_SAMPLER, ImageFormat.Unknown, null);
+    public static final ImageType TEXTURE_IMAGE_TYPE = new ImageType(FLOAT_TYPE, Dimensionality.Dim2D, ImageDepth.NO_DEPTH, false, false, Sampling.WITH_SAMPLER, ImageFormat.Unknown, null);
     public static final Type SAMPLER2D_TYPE = new SampledImageType(TEXTURE_IMAGE_TYPE);
     private final Map<String, ModuleConstant> registeredConstants;
     private final Map<String, ModuleComponent> registeredComponents;
@@ -105,7 +105,7 @@ public class ShambdaCompiler {
         Type[] paramTypes = new Type[parameters.size()-1];
         for(int i = 1;i<parameters.size();i++) { // start at 1 because first one is the function signature
             ShambdaParser.ParameterContext param = parameters.get(i);
-            paramTypes[i] = buildType(param.type());
+            paramTypes[i-1] = buildType(param.type());
         }
 
         FunctionType functionType = new FunctionType(returnType, paramTypes);
@@ -270,7 +270,7 @@ public class ShambdaCompiler {
         registeredComponents.put(name, constant);
     }
 
-    private Type buildType(ShambdaParser.TypeContext context) {
+    protected Type buildType(ShambdaParser.TypeContext context) {
         if(context.storageClass() != null) { // is a pointer type
             String storageClassName = context.storageClass().getText();
             return new PointerType(StorageClass.valueOf(storageClassName), buildType(context.type()));
