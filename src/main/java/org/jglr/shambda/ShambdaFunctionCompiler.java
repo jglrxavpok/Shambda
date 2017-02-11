@@ -53,16 +53,14 @@ public class ShambdaFunctionCompiler {
             arguments[i] = compileExpression(function, generator, parameters.get(i));
         }
         if(isStandardFunction(calledName)) {
-            return handleStandardFunction(calledName, arguments, generator);
+            return handleStandardFunction(calledName, arguments, generator, context);
         } else {
             ModuleComponent component = compiler.getComponantWithName(calledName);
             if(component == null)
                 compiler.compileError("Unknown symbol", context);
             if (component.getType() instanceof FunctionType) {
-                // TODO: function call
-                throw new UnsupportedOperationException("not implemented yet");
+                return generator.callFunction((ModuleFunction) component, arguments);
             } else {
-
                 return component;
             }
         }
@@ -81,12 +79,20 @@ public class ShambdaFunctionCompiler {
         return false;
     }
 
-    private ModuleComponent handleStandardFunction(String calledName, ModuleComponent[] arguments, FunctionGenerator generator) {
+    private ModuleComponent handleStandardFunction(String calledName, ModuleComponent[] arguments, FunctionGenerator generator, ShambdaParser.FunctionCallContext context) {
         if(calledName.startsWith("vec")) {
             String width = calledName.substring("vec".length());
-            // TODO: All arguments must be of the same type
+            Type firstType = arguments[0].getType();
+            for (ModuleComponent c : arguments) {
+                if( ! c.getType().equals(firstType))
+                    compiler.compileError("Arguments must all have the same type", context);
+
+                if( ! c.getType().isScalar()) {
+                    compiler.compileError("Vectors can only be created with scalar components, use arrays otherwise", context);
+                }
+            }
             int size = Integer.parseInt(width);
-            VectorType type = new VectorType(arguments[0].getType(), size);
+            VectorType type = new VectorType(firstType, size);
             return generator.compositeConstruct(type, arguments);
         }
         return null;

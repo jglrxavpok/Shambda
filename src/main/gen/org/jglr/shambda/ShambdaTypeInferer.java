@@ -40,7 +40,7 @@ public class ShambdaTypeInferer {
         if(expression.Boolean() != null) {
             return BOOL_TYPE;
         }
-        return null; // TODO
+        return null;
     }
 
     public FunctionType inferFunctionType(ShambdaParser.FunctionDeclarationContext context, List<ShambdaParser.ParameterContext> parameters) {

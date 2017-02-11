@@ -6,6 +6,10 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jglr.sbm.StorageClass;
+import org.jglr.sbm.sampler.Dimensionality;
+import org.jglr.sbm.sampler.ImageDepth;
+import org.jglr.sbm.sampler.ImageFormat;
+import org.jglr.sbm.sampler.Sampling;
 import org.jglr.sbm.types.*;
 import org.jglr.sbm.utils.*;
 import org.jglr.shambda.grammar.ShambdaLexer;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 
 public class ShambdaCompiler {
 
+
     private final String source;
     private final ModuleGenerator generator;
 
@@ -28,6 +33,8 @@ public class ShambdaCompiler {
     public static final IntType UNSIGNED_LONG_TYPE = new IntType(64, false);
     public static final FloatType FLOAT_TYPE = new FloatType(32);
     public static final FloatType DOUBLE_TYPE = new FloatType(64);
+    public static final Type TEXTURE_IMAGE_TYPE = new ImageType(FLOAT_TYPE, Dimensionality.Dim2D, ImageDepth.NO_DEPTH, false, false, Sampling.WITH_SAMPLER, ImageFormat.Unknown, null);
+    public static final Type SAMPLER2D_TYPE = new SampledImageType(TEXTURE_IMAGE_TYPE);
     private final Map<String, ModuleConstant> registeredConstants;
     private final Map<String, ModuleComponent> registeredComponents;
     private final ShambdaFunctionCompiler functionCompiler;
@@ -294,6 +301,9 @@ public class ShambdaCompiler {
 
     private Type buildPrimitiveType(TerminalNode identifier) {
         String raw = identifier.getText();
+        if(raw.equals("sampler2D")) {
+            return SAMPLER2D_TYPE;
+        }
         if(raw.startsWith("float")) {
             String width = raw.substring("float".length());
             try {
