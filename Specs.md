@@ -56,6 +56,21 @@ Unsigned long integers: ```u4564L```
 
 Booleans: ```true, false```
 
+---
+**Function calls:**
+```
+f(arg1 arg2)
+```
+```f()``` should be used for functions taking no arguments
+
+---
+**Using a function as an argument:**
+Just specify the name:
+```
+myfunc number = add (number 1f);;
+[...]
+functionTakingOtherFunction (myfunc);; (types ommited)
+```
 
 ---
 **Identifiers:**
@@ -92,7 +107,7 @@ In a Shambda file, you can find declarations of constants, uniforms and function
 ---
 **Stage functions:**
 
-Each shader stage is represented by a function named with the name of said stage (eg. ```fragment = vec4 1 1 1 1;;``` is a fragment shader returning the color white for each pixel)
+Each shader stage is represented by a function named with the name of said stage (eg. ```fragment = vec4(1f 1f 1f 1f);;``` is a fragment shader returning the color white for each pixel)
 
 Supported stage are:
 * 'fragment': Returns a vec4(float32) representing the ouput color as a RGBA float vector. Parameters are equivalent to the input in a fragment shader.
