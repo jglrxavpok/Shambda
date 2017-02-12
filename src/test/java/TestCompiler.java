@@ -6,6 +6,7 @@ import org.jglr.sbm.types.Type;
 import org.jglr.sbm.types.VectorType;
 import org.jglr.sbm.visitors.CodeCollector;
 import org.jglr.sbm.visitors.ModuleReader;
+import org.jglr.shambda.ShambdaCompileError;
 import org.jglr.shambda.ShambdaCompiler;
 import org.junit.Test;
 
@@ -28,6 +29,48 @@ public class TestCompiler {
         ShambdaCompiler compiler = new ShambdaCompiler("test:vec2(float32) = -vec2(-1f 5f);;");
         compiler.compile();
         printContent("testNegate", compiler.toBytes());
+    }
+
+    @Test(expected = ShambdaCompileError.class)
+    public void testArithmeticDifferentVectorTypes() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunction:vec4(float64) = " +
+                "vec4(45.5d 45.5d 45.5d 45.5d) + vec4(1 2 3 4) - vec4 $ 45.0d 45.0d 45.0d 45.0d;;");
+        compiler.compile();
+        printContent("testPlusMinusFloatVec", compiler.toBytes());
+    }
+
+    @Test(expected = ShambdaCompileError.class)
+    public void testArithmeticDifferentType() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunction:float64 = 45.5d + 90 / 45.0f;;");
+        compiler.compile();
+    }
+
+    @Test
+    public void testPlusMinusVectors() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunction:vec4(float64) = " +
+                "vec4(45.5d 45.5d 45.5d 45.5d) + vec4(90.5d 90.5d 90.5d 90.5d) - vec4 $ 45.0d 45.0d 45.0d 45.0d;;");
+        compiler.compile();
+        printContent("testPlusMinusFloatVec", compiler.toBytes());
+    }
+
+    @Test
+    public void testPlusMinusFloat() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunction:float64 = 45.5d + 90.5d - 45.0d;;");
+        compiler.compile();
+        ModuleReader reader = new ModuleReader(compiler.toBytes());
+        CodeCollector collector = (CodeCollector) reader.visitCode();
+
+        printContent("testPlusMinusFloat", compiler.toBytes());
+    }
+
+    @Test
+    public void testPlusMinusInt() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunction:int32 = 45 + 90 - 45;;");
+        compiler.compile();
+        ModuleReader reader = new ModuleReader(compiler.toBytes());
+        CodeCollector collector = (CodeCollector) reader.visitCode();
+
+        printContent("testPlusMinusInt", compiler.toBytes());
     }
 
     @Test

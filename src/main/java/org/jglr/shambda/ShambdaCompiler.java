@@ -394,4 +394,8 @@ public class ShambdaCompiler {
     public ShambdaTypeInferer getTypeInferer() {
         return typeInferer;
     }
+
+    public int nextTmpID() {
+        return generator.nextTmpID();
+    }
 }

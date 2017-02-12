@@ -1,5 +1,6 @@
 package org.jglr.shambda;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.jglr.sbm.types.*;
 import org.jglr.sbm.utils.*;
@@ -12,7 +13,6 @@ import java.util.Map;
 
 public class ShambdaFunctionCompiler {
     private ShambdaCompiler compiler;
-    private int tmpID;
     private final ExpressionCompiler expressionCompiler;
 
     public ShambdaFunctionCompiler(ShambdaCompiler compiler) {
@@ -141,7 +141,7 @@ public class ShambdaFunctionCompiler {
     }
 
     private int nextTmpID() {
-        return tmpID++;
+        return compiler.nextTmpID();
     }
 
     private class ExpressionCompiler extends ShambdaBaseVisitor<ModuleComponent> {
@@ -183,7 +183,7 @@ public class ShambdaFunctionCompiler {
         public ModuleComponent visitUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx) {
             ModuleComponent toNegate = compileExpression(function, generator, ctx.expression(), parameters);
             Type type = toNegate.getType();
-            Type scalarType = toNegate.getType();
+            Type scalarType = type;
             if(type instanceof VectorType) {
                 scalarType = ((VectorType)type).getComponentType();
             }
@@ -192,6 +192,54 @@ public class ShambdaFunctionCompiler {
                 generator.negateInt(result, toNegate);
             } else if(scalarType instanceof FloatType) {
                 generator.negateFloat(result, toNegate);
+            } else {
+                compiler.compileError("Cannot negate value of type: "+type+" (related scalar type was "+scalarType+")", ctx);
+            }
+            return result;
+        }
+
+        @Override
+        public ModuleComponent visitDivExpr(ShambdaParser.DivExprContext ctx) {
+            ModuleComponent left = compileExpression(function, generator, ctx.expression(0), parameters);
+            ModuleComponent right = compileExpression(function, generator, ctx.expression(1), parameters);
+            return visitArithmetic(left, right, ctx, generator::divInt, generator::divFloat);
+        }
+
+        @Override
+        public ModuleComponent visitMultExpr(ShambdaParser.MultExprContext ctx) {
+            ModuleComponent left = compileExpression(function, generator, ctx.expression(0), parameters);
+            ModuleComponent right = compileExpression(function, generator, ctx.expression(1), parameters);
+            return visitArithmetic(left, right, ctx, generator::mulInt, generator::mulFloat);
+        }
+
+        @Override
+        public ModuleComponent visitMinusExpr(ShambdaParser.MinusExprContext ctx) {
+            ModuleComponent left = compileExpression(function, generator, ctx.expression(0), parameters);
+            ModuleComponent right = compileExpression(function, generator, ctx.expression(1), parameters);
+            return visitArithmetic(left, right, ctx, generator::subInt, generator::subFloat);
+        }
+
+        @Override
+        public ModuleComponent visitPlusExpr(ShambdaParser.PlusExprContext ctx) {
+            ModuleComponent left = compileExpression(function, generator, ctx.expression(0), parameters);
+            ModuleComponent right = compileExpression(function, generator, ctx.expression(1), parameters);
+            return visitArithmetic(left, right, ctx, generator::addInt, generator::addFloat);
+        }
+
+        private ModuleComponent visitArithmetic(ModuleComponent left, ModuleComponent right, ParserRuleContext ctx, ArithmeticGeneration intVariant, ArithmeticGeneration floatVariant) {
+            if( ! left.getType().equals(right.getType())) {
+                compiler.compileError("Operands must have the same type, found "+left.getType()+" and "+right.getType(), ctx);
+            }
+            Type type = left.getType();
+            Type scalarType = type;
+            if(type instanceof VectorType) {
+                scalarType = ((VectorType)type).getComponentType();
+            }
+            ModuleVariable result = new ModuleVariable("$negate"+nextTmpID(), type);
+            if(scalarType instanceof IntType) {
+                intVariant.apply(result, left, right);
+            } else if(scalarType instanceof FloatType) {
+                floatVariant.apply(result, left, right);
             } else {
                 compiler.compileError("Cannot negate value of type: "+type+" (related scalar type was "+scalarType+")", ctx);
             }
@@ -221,5 +269,10 @@ public class ShambdaFunctionCompiler {
         public Map<String, ModuleVariable> getParameters() {
             return parameters;
         }
+    }
+
+    @FunctionalInterface
+    private interface ArithmeticGeneration {
+        void apply(ModuleVariable result, ModuleComponent left, ModuleComponent right);
     }
 }
