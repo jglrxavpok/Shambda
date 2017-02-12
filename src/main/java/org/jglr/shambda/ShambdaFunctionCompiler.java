@@ -1,7 +1,9 @@
 package org.jglr.shambda;
 
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.jglr.sbm.types.*;
 import org.jglr.sbm.utils.*;
+import org.jglr.shambda.grammar.ShambdaBaseVisitor;
 import org.jglr.shambda.grammar.ShambdaParser;
 
 import java.util.HashMap;
@@ -11,9 +13,11 @@ import java.util.Map;
 public class ShambdaFunctionCompiler {
     private ShambdaCompiler compiler;
     private int tmpID;
+    private final ExpressionCompiler expressionCompiler;
 
     public ShambdaFunctionCompiler(ShambdaCompiler compiler) {
         this.compiler = compiler;
+        expressionCompiler = new ExpressionCompiler();
     }
 
     public void compile(FunctionGenerator generator, ShambdaParser.FunctionDeclarationContext context) {
@@ -120,29 +124,13 @@ public class ShambdaFunctionCompiler {
     }
 
     private ModuleComponent compileExpression(ModuleFunction function, FunctionGenerator generator, ShambdaParser.ExpressionContext context, Map<String, ModuleVariable> parameters) {
-        if(context.constantExpression() != null) {
-            return compiler.getConstant(compiler.getConstantID(context.constantExpression()));
-        }
-        if(context.functionCall() != null) {
-            return compileFunctionCall(function, generator, context.functionCall(), parameters);
-        }
-        if(context.expression() != null) { // has a sub-expression
-            return compileExpression(function, generator, context.expression(), parameters);
-        }
-        if(context.dereference() != null) {
-            return compileDereference(function, generator, context.dereference(), parameters);
-        }
-        if(context.Identifier() != null) {
-            String id = context.Identifier().getText();
-            if(parameters.containsKey(id)) {
-                return parameters.get(id);
-            }
-            return compiler.getComponantWithName(id);
-        }
-        return null;
+        expressionCompiler.setFunction(function);
+        expressionCompiler.setGenerator(generator);
+        expressionCompiler.setParameters(parameters);
+        return context.accept(expressionCompiler);
     }
 
-    private ModuleComponent compileDereference(ModuleFunction function, FunctionGenerator generator, ShambdaParser.DereferenceContext context, Map<String, ModuleVariable> parameters) {
+    private ModuleComponent compileDereference(ModuleFunction function, FunctionGenerator generator, ShambdaParser.DereferenceExprContext context, Map<String, ModuleVariable> parameters) {
         ModuleComponent pointer = compileExpression(function, generator, context.expression(), parameters);
         if(! (pointer.getType() instanceof PointerType)) {
             compiler.compileError("Derefencing a non-pointer type", context);
@@ -154,5 +142,84 @@ public class ShambdaFunctionCompiler {
 
     private int nextTmpID() {
         return tmpID++;
+    }
+
+    private class ExpressionCompiler extends ShambdaBaseVisitor<ModuleComponent> {
+
+        private ModuleFunction function;
+        private FunctionGenerator generator;
+        private Map<String, ModuleVariable> parameters;
+
+        @Override
+        public ModuleComponent visitConstantExpressionExpr(ShambdaParser.ConstantExpressionExprContext ctx) {
+            return compiler.getConstant(compiler.getConstantID(ctx.constantExpression()));
+        }
+
+        @Override
+        public ModuleComponent visitFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx) {
+            return compileFunctionCall(function, generator, ctx.functionCall(), parameters);
+        }
+
+        @Override
+        public ModuleComponent visitWrappedExpr(ShambdaParser.WrappedExprContext ctx) {
+            return compileExpression(function, generator, ctx.expression(), parameters);
+        }
+
+        @Override
+        public ModuleComponent visitDereferenceExpr(ShambdaParser.DereferenceExprContext ctx) {
+            return compileDereference(function, generator, ctx, parameters);
+        }
+
+        @Override
+        public ModuleComponent visitIdExpr(ShambdaParser.IdExprContext ctx) {
+            String id = ctx.Identifier().getText();
+            if(parameters.containsKey(id)) {
+                return parameters.get(id);
+            }
+            return compiler.getComponantWithName(id);
+        }
+
+        @Override
+        public ModuleComponent visitUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx) {
+            ModuleComponent toNegate = compileExpression(function, generator, ctx.expression(), parameters);
+            Type type = toNegate.getType();
+            Type scalarType = toNegate.getType();
+            if(type instanceof VectorType) {
+                scalarType = ((VectorType)type).getComponentType();
+            }
+            ModuleVariable result = new ModuleVariable("$negate"+nextTmpID(), type);
+            if(scalarType instanceof IntType) {
+                generator.negateInt(result, toNegate);
+            } else if(scalarType instanceof FloatType) {
+                generator.negateFloat(result, toNegate);
+            } else {
+                compiler.compileError("Cannot negate value of type: "+type+" (related scalar type was "+scalarType+")", ctx);
+            }
+            return result;
+        }
+
+        public void setFunction(ModuleFunction function) {
+            this.function = function;
+        }
+
+        public ModuleFunction getFunction() {
+            return function;
+        }
+
+        public void setGenerator(FunctionGenerator generator) {
+            this.generator = generator;
+        }
+
+        public FunctionGenerator getGenerator() {
+            return generator;
+        }
+
+        public void setParameters(Map<String,ModuleVariable> parameters) {
+            this.parameters = parameters;
+        }
+
+        public Map<String, ModuleVariable> getParameters() {
+            return parameters;
+        }
     }
 }

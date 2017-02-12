@@ -78,25 +78,125 @@ public interface ShambdaListener extends ParseTreeListener {
 	 */
 	void exitConstantExpression(ShambdaParser.ConstantExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#expression}.
+	 * Enter a parse tree produced by the {@code wrappedExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(ShambdaParser.ExpressionContext ctx);
+	void enterWrappedExpr(ShambdaParser.WrappedExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#expression}.
+	 * Exit a parse tree produced by the {@code wrappedExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(ShambdaParser.ExpressionContext ctx);
+	void exitWrappedExpr(ShambdaParser.WrappedExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#dereference}.
+	 * Enter a parse tree produced by the {@code dereferenceExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterDereference(ShambdaParser.DereferenceContext ctx);
+	void enterDereferenceExpr(ShambdaParser.DereferenceExprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#dereference}.
+	 * Exit a parse tree produced by the {@code dereferenceExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitDereference(ShambdaParser.DereferenceContext ctx);
+	void exitDereferenceExpr(ShambdaParser.DereferenceExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code unaryMinusExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code unaryMinusExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code constantExpressionExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstantExpressionExpr(ShambdaParser.ConstantExpressionExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code constantExpressionExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstantExpressionExpr(ShambdaParser.ConstantExpressionExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code functionCallExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code functionCallExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code divExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterDivExpr(ShambdaParser.DivExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code divExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitDivExpr(ShambdaParser.DivExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code multExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultExpr(ShambdaParser.MultExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code multExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultExpr(ShambdaParser.MultExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code minusExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMinusExpr(ShambdaParser.MinusExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code minusExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMinusExpr(ShambdaParser.MinusExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code plusExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterPlusExpr(ShambdaParser.PlusExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code plusExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitPlusExpr(ShambdaParser.PlusExprContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code idExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdExpr(ShambdaParser.IdExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code idExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdExpr(ShambdaParser.IdExprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ShambdaParser#statement}.
 	 * @param ctx the parse tree

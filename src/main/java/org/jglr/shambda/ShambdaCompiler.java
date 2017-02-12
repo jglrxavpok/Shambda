@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jglr.sbm.*;
 import org.jglr.sbm.sampler.Dimensionality;
@@ -12,6 +13,7 @@ import org.jglr.sbm.sampler.ImageFormat;
 import org.jglr.sbm.sampler.Sampling;
 import org.jglr.sbm.types.*;
 import org.jglr.sbm.utils.*;
+import org.jglr.shambda.grammar.ShambdaBaseVisitor;
 import org.jglr.shambda.grammar.ShambdaLexer;
 import org.jglr.shambda.grammar.ShambdaParser;
 
@@ -36,11 +38,12 @@ public class ShambdaCompiler {
     public static final FloatType DOUBLE_TYPE = new FloatType(64);
     public static final ImageType TEXTURE_IMAGE_TYPE = new ImageType(FLOAT_TYPE, Dimensionality.Dim2D, ImageDepth.NO_DEPTH, false, false, Sampling.WITH_SAMPLER, ImageFormat.Unknown, null);
     public static final Type SAMPLER2D_TYPE = new SampledImageType(TEXTURE_IMAGE_TYPE);
-    private final Map<String, ModuleConstant> registeredConstants;
+    protected final Map<String, ModuleConstant> registeredConstants;
     private final Map<String, ModuleComponent> registeredComponents;
     private final ShambdaFunctionCompiler functionCompiler;
     private final ShambdaTypeInferer typeInferer;
     private String filename;
+    private final ParseTreeVisitor<Void> missingConstantsVisitor;
 
     public ShambdaCompiler(String source) {
         registeredConstants = new HashMap<>();
@@ -50,6 +53,7 @@ public class ShambdaCompiler {
         generator = new ModuleGenerator();
         filename = "<unknown>";
         typeInferer = new ShambdaTypeInferer(this);
+        missingConstantsVisitor = new MissingConstantVisitor(this);
     }
 
     public String getFilename() {
@@ -180,21 +184,8 @@ public class ShambdaCompiler {
         }
     }
 
-    private void handleMissingConstants(ShambdaParser.ExpressionContext expression) {
-        if(expression.constantExpression() != null) {
-            ShambdaParser.ConstantExpressionContext constant = expression.constantExpression();
-            String id = getConstantID(constant);
-            if( ! registeredConstants.containsKey(id)) {
-                generateConstant(id, typeInferer.inferType(constant), constant);
-            }
-        } else if(expression.expression() != null) {
-            handleMissingConstants(expression.expression());
-        } else if(expression.functionCall() != null) {
-            ShambdaParser.FunctionCallContext call = expression.functionCall();
-            call.expression().forEach(this::handleMissingConstants);
-        } else if(expression.dereference() != null) {
-            handleMissingConstants(expression.dereference().expression());
-        }
+    protected void handleMissingConstants(ShambdaParser.ExpressionContext expression) {
+        expression.accept(missingConstantsVisitor);
     }
 
     public String getConstantID(ShambdaParser.ConstantExpressionContext expression) {
@@ -268,7 +259,7 @@ public class ShambdaCompiler {
         generateConstant(name, type, expression);
     }
 
-    private void generateConstant(String name, Type type, ShambdaParser.ConstantExpressionContext expression) {
+    protected void generateConstant(String name, Type type, ShambdaParser.ConstantExpressionContext expression) {
         long[] bitPattern = new long[0];
         Type inferredType = typeInferer.inferType(expression);
         if(type != null && !type.equals(inferredType)) {
@@ -398,5 +389,9 @@ public class ShambdaCompiler {
 
     public ModuleComponent getComponantWithName(String name) {
         return registeredComponents.get(name);
+    }
+
+    public ShambdaTypeInferer getTypeInferer() {
+        return typeInferer;
     }
 }

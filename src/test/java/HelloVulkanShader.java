@@ -31,7 +31,7 @@ public class HelloVulkanShader {
         writeUsualShaderWithGenerator(writer);
         return writer.toBytes();*/
         ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D*(Input);;\n" +
-                "fragment:vec4(float32) texCoords:vec2(float32) = vec4(1f 0f 1f 1f);;");
+                "fragment:vec4(float32) texCoords:vec2(float32) = -vec4 $ (-1f) 0f (-1f) (-1f);;");
         compiler.compile();
         return compiler.toBytes();
     }

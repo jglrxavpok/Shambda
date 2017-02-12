@@ -42,11 +42,18 @@ constantExpression:
 Integer:
     Digits;
 
-expression:
-    functionCall | constantExpression | Identifier | dereference | LEFT_PAREN expression RIGHT_PAREN;
-
-dereference:
-    '!' expression;
+expression
+    : '!' expression                       #dereferenceExpr
+    | '-' expression                    #unaryMinusExpr
+    | functionCall                      #functionCallExpr
+    | constantExpression                #constantExpressionExpr
+    | Identifier                        #idExpr
+    | LEFT_PAREN expression RIGHT_PAREN #wrappedExpr
+    | expression '*' expression         #multExpr
+    | expression '/' expression         #divExpr
+    | expression '-' expression         #minusExpr
+    | expression '+' expression         #plusExpr
+    ;
 
 statement:
     expression | variableDeclaration | variableAssignment;
@@ -58,7 +65,8 @@ variableDeclaration:
     'let' variableAssignment;
 
 functionCall:
-    Identifier LEFT_PAREN (expression)* RIGHT_PAREN;
+    Identifier LEFT_PAREN (expression)* RIGHT_PAREN
+    | Identifier '$' expression*;
 
 type:
       Identifier
