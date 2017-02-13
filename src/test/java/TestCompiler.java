@@ -26,6 +26,14 @@ public class TestCompiler {
     }
 
     @Test
+    public void testMatrixMemberAccessing() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("accessColumn:vec3(float32) matrix:mat4(vec3(float32)) = matrix.m2;;\n" +
+                "accessValue:uint32 matrix0:mat4(vec4(uint32)) = matrix0.m23;;");
+        compiler.compile();
+        printContent("testMatrixMemberAccessing", compiler.toBytes());
+    }
+
+    @Test
     public void testVectorMemberAccessing() throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler("myfunction:float64 v:vec4(float64) = " +
                 "v.xyzw ; v.zyxyw; v.z; v.w; v.r; v.g; v.b; v.a;;");

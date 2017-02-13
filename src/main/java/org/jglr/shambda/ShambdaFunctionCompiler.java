@@ -255,7 +255,6 @@ public class ShambdaFunctionCompiler {
             if(toAccess.getType().isScalar())
                 compiler.compileError("Cannot access member of scalar type", ctx);
 
-            // TODO: Matrices
             if(toAccess.getType() instanceof VectorType) {
                 VectorType vectorType = ((VectorType) toAccess.getType());
                 long size = vectorType.getComponentCount();
@@ -266,8 +265,35 @@ public class ShambdaFunctionCompiler {
                     VectorType type = new VectorType(vectorType.getComponentType(), members.length);
                     return generator.compositeConstruct(type, members);
                 }
+            } else if(toAccess.getType() instanceof MatrixType) {
+                MatrixType matrixType = ((MatrixType) toAccess.getType());
+                long size = matrixType.getColumnCount();
+                VectorType columnType = (VectorType) matrixType.getColumnType();
+                long columnSize = columnType.getComponentCount();
+                if(name.startsWith("m")) {
+                    if(name.length() >= 2) {
+                        int column = name.charAt(1) - '0';
+                        if(column >= size || column < 0) {
+                            compiler.compileError("Cannot access column "+name.charAt(1), ctx);
+                        }
+
+                        if(name.length() >= 3) {
+                            int row = name.charAt(2) - '0';
+                            if(row >= columnSize || row < 0) {
+                                compiler.compileError("Cannot access row "+name.charAt(2), ctx);
+                            }
+                            ModuleVariable var = new ModuleVariable("$tmpaccess"+nextTmpID()+"$", columnType.getComponentType());
+                            generator.compositeExtract(var, toAccess, column, row);
+                            return var;
+                        } else {
+                            ModuleVariable var = new ModuleVariable("$tmpaccess"+nextTmpID()+"$", columnType);
+                            generator.compositeExtract(var, toAccess, column);
+                            return var;
+                        }
+                    }
+                }
             }
-            compiler.compileError("Cannot access member of type: "+toAccess.getType(), ctx);
+            compiler.compileError("Cannot access member '"+name+"' of type: "+toAccess.getType(), ctx);
             return super.visitAccessExpr(ctx);
         }
 
