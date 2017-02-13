@@ -57,6 +57,11 @@ Unsigned long integers: ```u4564L```
 Booleans: ```true, false```
 
 ---
+**Member accessing:**
+Expression followed by dot and member name:
+```vec4(1f (-8f) 5f 0f).x``` yields '1f'
+
+---
 **Function calls:**
 ```
 f(arg1 arg2)
@@ -75,9 +80,8 @@ functionTakingOtherFunction (myfunc);; (types ommited)
 ---
 **Identifiers:**
 
-Shambda follows the same rules as Java for its identifiers with a single exception, single letter names are not allowed:
-
-```a```, ```_```, ```é``` are all not valid in Shambda.
+Shambda follows the same rules as Java for its identifiers: starting with a letter, an underscore or a dollar sign, followed by letters, underscores, dollar signs or digits.
+```__my$uperDuperAwe$0m3Identifier_```
 
 Accents are discouraged since they can lead to issues with encodings.
 

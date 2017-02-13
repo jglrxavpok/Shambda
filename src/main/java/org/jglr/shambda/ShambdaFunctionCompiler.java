@@ -246,6 +246,73 @@ public class ShambdaFunctionCompiler {
             return result;
         }
 
+        @Override
+        public ModuleComponent visitAccessExpr(ShambdaParser.AccessExprContext ctx) {
+            ModuleComponent toAccess = compileExpression(function, generator, ctx.expression(), parameters);
+            String name = ctx.Identifier().getText();
+            // TODO: handle structures
+
+            if(toAccess.getType().isScalar())
+                compiler.compileError("Cannot access member of scalar type", ctx);
+
+            // TODO: Matrices
+            if(toAccess.getType() instanceof VectorType) {
+                VectorType vectorType = ((VectorType) toAccess.getType());
+                long size = vectorType.getComponentCount();
+                ModuleVariable[] members = extractMembers(vectorType, ctx, toAccess, size, name);
+                if(members.length == 1) {
+                    return members[0];
+                } else {
+                    VectorType type = new VectorType(vectorType.getComponentType(), members.length);
+                    return generator.compositeConstruct(type, members);
+                }
+            }
+            compiler.compileError("Cannot access member of type: "+toAccess.getType(), ctx);
+            return super.visitAccessExpr(ctx);
+        }
+
+        private ModuleVariable[] extractMembers(VectorType vectorType, ShambdaParser.AccessExprContext ctx, ModuleComponent toAccess, long vectorSize, String memberList) {
+            char[] memberNames = memberList.toCharArray();
+            Map<Character, ModuleVariable> loaded = new HashMap<>();
+            ModuleVariable[] members = new ModuleVariable[memberNames.length];
+            for (int i = 0; i < memberNames.length; i++) {
+                char name = memberNames[i];
+                if( ! loaded.containsKey(name)) {
+                    int index = -1;
+                    switch (name) {
+                        case 'x':
+                        case 'r':
+                            index = 0;
+                            break;
+
+                        case 'y':
+                        case 'g':
+                            index = 1;
+                            break;
+
+                        case 'z':
+                        case 'b':
+                            index = 2;
+                            break;
+
+                        case 'w':
+                        case 'a':
+                            index = 3;
+                            break;
+                    }
+
+                    if(index == -1 || index >= vectorSize)
+                        compiler.compileError("Unknown member '"+name+"' for vector of type "+vectorType, ctx);
+
+                    ModuleVariable var = new ModuleVariable("$tmpaccess"+nextTmpID()+"$", vectorType.getComponentType());
+                    generator.compositeExtract(var, toAccess, index);
+                    loaded.put(name, var);
+                }
+                members[i] = loaded.get(name);
+            }
+            return members;
+        }
+
         public void setFunction(ModuleFunction function) {
             this.function = function;
         }

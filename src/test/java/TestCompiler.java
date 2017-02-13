@@ -20,15 +20,17 @@ public class TestCompiler {
 
     @Test
     public void testNegate() throws IOException {
-        /**
-         * ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D*(Input);;\n" +
-         "fragment:vec4(float32) texCoords:vec2(float32) = -vec4(-1f 0f -1f -1f);;");
-         compiler.compile();
-         return compiler.toBytes();
-         */
         ShambdaCompiler compiler = new ShambdaCompiler("test:vec2(float32) = -vec2(-1f 5f);;");
         compiler.compile();
         printContent("testNegate", compiler.toBytes());
+    }
+
+    @Test
+    public void testVectorMemberAccessing() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("myfunction:float64 v:vec4(float64) = " +
+                "v.xyzw ; v.zyxyw; v.z; v.w; v.r; v.g; v.b; v.a;;");
+        compiler.compile();
+        printContent("testVectorMemberAccessing", compiler.toBytes());
     }
 
     @Test(expected = ShambdaCompileError.class)

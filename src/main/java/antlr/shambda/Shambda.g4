@@ -43,11 +43,12 @@ Integer:
     Digits;
 
 expression
-    : '!' expression                       #dereferenceExpr
+    : '!' expression                    #dereferenceExpr
     | '-' expression                    #unaryMinusExpr
     | functionCall                      #functionCallExpr
     | constantExpression                #constantExpressionExpr
     | Identifier                        #idExpr
+    | expression '.' Identifier                #accessExpr
     | LEFT_PAREN expression RIGHT_PAREN #wrappedExpr
     | expression '*' expression         #multExpr
     | expression '/' expression         #divExpr
@@ -162,15 +163,6 @@ ASSIGN_SIGN:
 
 EQUAL_SIGN:
     '=';
-
-LOWERCASE_LETTER:
-    ('a'..'z');
-
-UPPERCASE_LETTER:
-    ('A'..'Z');
-
-STAR:
-    [*];
 
 WHITESPACE:
     [ \t\n\r]+ -> skip;

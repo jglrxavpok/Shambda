@@ -4,5 +4,6 @@ in vec4 vertColor;
 out vec4 finalColor;
 
 void main() {
-	finalColor = vertColor * vec4(1,vertColor.r,0,1);
+    vec4 something = vec4(vertColor.rgb, 0);
+	finalColor = vertColor * vec4(1,something.r,0,1);
 }
