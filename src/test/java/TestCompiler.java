@@ -28,7 +28,7 @@ public class TestCompiler {
     @Test
     public void testMatrixMemberAccessing() throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler("accessColumn:vec3(float32) matrix:mat4(vec3(float32)) = matrix.m2;;\n" +
-                "accessValue:uint32 matrix0:mat4(vec4(uint32)) = matrix0.m23;;");
+                "accessValue:uint32 matrix:mat4(vec4(uint32)) = matrix.m23;;");
         compiler.compile();
         printContent("testMatrixMemberAccessing", compiler.toBytes());
     }
