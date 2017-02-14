@@ -19,6 +19,14 @@ import static org.junit.Assert.assertEquals;
 public class TestCompiler {
 
     @Test
+    public void testArrayAccess() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("test:float32 array:float32[15] = array[0];;\n" +
+                "test2:float32 array:float32[15][2] = array[1][1];;");
+        compiler.compile();
+        printContent("testArrayAccess", compiler.toBytes());
+    }
+
+    @Test
     public void testArrayType() throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler("test:float32 array:float32[15] = 0f;;\n" +
                 "test2:float32 array:float32[15][2] = 4f;;");

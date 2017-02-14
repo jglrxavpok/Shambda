@@ -101,6 +101,13 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDivExpr(ShambdaParser.DivExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code elementAccessExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code multExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree

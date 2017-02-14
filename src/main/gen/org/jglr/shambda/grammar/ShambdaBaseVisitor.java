@@ -115,6 +115,13 @@ public class ShambdaBaseVisitor<T> extends AbstractParseTreeVisitor<T> implement
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitMultExpr(ShambdaParser.MultExprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

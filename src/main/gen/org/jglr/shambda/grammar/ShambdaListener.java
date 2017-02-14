@@ -160,6 +160,18 @@ public interface ShambdaListener extends ParseTreeListener {
 	 */
 	void exitDivExpr(ShambdaParser.DivExprContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code elementAccessExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code elementAccessExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code multExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree

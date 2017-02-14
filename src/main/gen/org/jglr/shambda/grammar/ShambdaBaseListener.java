@@ -184,6 +184,18 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterMultExpr(ShambdaParser.MultExprContext ctx) { }
 	/**
 	 * {@inheritDoc}

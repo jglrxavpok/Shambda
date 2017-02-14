@@ -51,7 +51,8 @@ expression
     | functionCall                      #functionCallExpr
     | constantExpression                #constantExpressionExpr
     | Identifier                        #idExpr
-    | expression '.' Identifier                #accessExpr
+    | expression '[' expression ']'     #elementAccessExpr
+    | expression '.' Identifier         #accessExpr
     | LEFT_PAREN expression RIGHT_PAREN #wrappedExpr
     | expression '*' expression         #multExpr
     | expression '/' expression         #divExpr

@@ -56,7 +56,8 @@ public class TypeBuilder extends ShambdaBaseVisitor<Type> {
     public Type visitArrayType(ShambdaParser.ArrayTypeContext ctx) {
         Type elementType = ctx.type().accept(this);
         int size = Integer.parseInt(ctx.Integer().getText());
-        return new ArrayType(elementType, size);
+        StorageClass storageClass = StorageClass.Function;
+        return new PointerType(storageClass, new ArrayType(elementType, size));
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.jglr.shambda;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+import org.jglr.sbm.StorageClass;
 import org.jglr.sbm.types.*;
 import org.jglr.sbm.utils.*;
 import org.jglr.shambda.grammar.ShambdaBaseVisitor;
@@ -243,6 +244,30 @@ public class ShambdaFunctionCompiler {
             } else {
                 compiler.compileError("Cannot negate value of type: "+type+" (related scalar type was "+scalarType+")", ctx);
             }
+            return result;
+        }
+
+        @Override
+        public ModuleComponent visitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) {
+            ModuleComponent toAccess = compileExpression(function, generator, ctx.expression(0), parameters);
+            if( ! (toAccess.getType() instanceof PointerType)) {
+                compiler.compileError("Cannot access member from type: "+toAccess.getType(), ctx);
+            }
+            Type arrayType = ((PointerType)toAccess.getType()).getType();
+            ModuleComponent index = compileExpression(function, generator, ctx.expression(1), parameters);
+            if(arrayType.isScalar())
+                compiler.compileError("Cannot access element of scalar type: "+arrayType, ctx);
+            if( ! (arrayType instanceof RuntimeArrayType || arrayType instanceof ArrayType))
+                compiler.compileError("Type does not have elements: "+arrayType, ctx);
+            Type subType;
+            if(arrayType instanceof RuntimeArrayType)
+                subType = ((RuntimeArrayType) arrayType).getElementType();
+            else
+                subType = ((ArrayType)arrayType).getElementType();
+            ModuleVariable result = new ModuleVariable("$tmp_elementaccess"+nextTmpID()+"$", subType);
+            ModuleVariable pointer = new ModuleVariable("$tmp_elementaccess"+nextTmpID()+"$", new PointerType(StorageClass.Function, subType));
+            generator.accessChain(pointer, toAccess, index);
+            generator.load(result, pointer);
             return result;
         }
 
