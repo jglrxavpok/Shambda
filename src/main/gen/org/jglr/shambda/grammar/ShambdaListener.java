@@ -28,6 +28,16 @@ public interface ShambdaListener extends ParseTreeListener {
 	 */
 	void exitSetImport(ShambdaParser.SetImportContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ShambdaParser#structDefinition}.
+	 * @param ctx the parse tree
+	 */
+	void enterStructDefinition(ShambdaParser.StructDefinitionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ShambdaParser#structDefinition}.
+	 * @param ctx the parse tree
+	 */
+	void exitStructDefinition(ShambdaParser.StructDefinitionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ShambdaParser#constantDeclaration}.
 	 * @param ctx the parse tree
 	 */
@@ -250,15 +260,53 @@ public interface ShambdaListener extends ParseTreeListener {
 	 */
 	void exitFunctionCall(ShambdaParser.FunctionCallContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ShambdaParser#type}.
+	 * Enter a parse tree produced by the {@code arrayType}
+	 * labeled alternative in {@link ShambdaParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void enterType(ShambdaParser.TypeContext ctx);
+	void enterArrayType(ShambdaParser.ArrayTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ShambdaParser#type}.
+	 * Exit a parse tree produced by the {@code arrayType}
+	 * labeled alternative in {@link ShambdaParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void exitType(ShambdaParser.TypeContext ctx);
+	void exitArrayType(ShambdaParser.ArrayTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code pointerType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterPointerType(ShambdaParser.PointerTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code pointerType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitPointerType(ShambdaParser.PointerTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code baseType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterBaseType(ShambdaParser.BaseTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code baseType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitBaseType(ShambdaParser.BaseTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code compositeType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompositeType(ShambdaParser.CompositeTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code compositeType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompositeType(ShambdaParser.CompositeTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ShambdaParser#storageClass}.
 	 * @param ctx the parse tree

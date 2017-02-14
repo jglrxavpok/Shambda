@@ -23,6 +23,12 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSetImport(ShambdaParser.SetImportContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ShambdaParser#structDefinition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStructDefinition(ShambdaParser.StructDefinitionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ShambdaParser#constantDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -154,11 +160,33 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionCall(ShambdaParser.FunctionCallContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#type}.
+	 * Visit a parse tree produced by the {@code arrayType}
+	 * labeled alternative in {@link ShambdaParser#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitType(ShambdaParser.TypeContext ctx);
+	T visitArrayType(ShambdaParser.ArrayTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code pointerType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPointerType(ShambdaParser.PointerTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code baseType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBaseType(ShambdaParser.BaseTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code compositeType}
+	 * labeled alternative in {@link ShambdaParser#type}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCompositeType(ShambdaParser.CompositeTypeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ShambdaParser#storageClass}.
 	 * @param ctx the parse tree

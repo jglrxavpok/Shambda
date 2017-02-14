@@ -19,6 +19,14 @@ import static org.junit.Assert.assertEquals;
 public class TestCompiler {
 
     @Test
+    public void testArrayType() throws IOException {
+        ShambdaCompiler compiler = new ShambdaCompiler("test:float32 array:float32[15] = 0f;;\n" +
+                "test2:float32 array:float32[15][2] = 4f;;");
+        compiler.compile();
+        printContent("testArrayType", compiler.toBytes());
+    }
+
+    @Test
     public void testNegate() throws IOException {
         ShambdaCompiler compiler = new ShambdaCompiler("test:vec2(float32) = -vec2(-1f 5f);;");
         compiler.compile();
@@ -138,7 +146,7 @@ public class TestCompiler {
 
     @Test
     public void testSetImport() throws IOException {
-        ShambdaCompiler compiler = new ShambdaCompiler("#import GLSL.std.450;;");
+        ShambdaCompiler compiler = new ShambdaCompiler("import GLSL.std.450;;");
         compiler.compile();
         ModuleReader reader = new ModuleReader(compiler.toBytes());
         CodeCollector collector = (CodeCollector) reader.visitCode();

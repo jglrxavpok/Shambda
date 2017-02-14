@@ -1,10 +1,13 @@
 grammar Shambda;
 
 file:
-    (setImport | functionDeclaration | uniformDeclaration | constantDeclaration)* EOF;
+    (structDefinition | setImport | functionDeclaration | uniformDeclaration | constantDeclaration)* EOF;
 
 setImport:
-    '#import' (Identifier | Integer) ('.' (Identifier | Integer))* DOUBLE_SEMI_COLON;
+    'import' (Identifier | Integer) ('.' (Identifier | Integer))* DOUBLE_SEMI_COLON;
+
+structDefinition:
+    'struct' Identifier LCURLY (parameter SEMI_COLON)* RCURLY DOUBLE_SEMI_COLON;
 
 constantDeclaration:
     'constant' parameter EQUAL_SIGN constantExpression DOUBLE_SEMI_COLON;
@@ -69,10 +72,14 @@ functionCall:
     Identifier LEFT_PAREN (expression)* RIGHT_PAREN
     | Identifier '$' expression*;
 
-type:
-      Identifier
-    | Identifier LEFT_PAREN type RIGHT_PAREN
-    | type '*' LEFT_PAREN storageClass RIGHT_PAREN;
+type
+    : Identifier                                        #baseType
+    | Identifier LEFT_PAREN type RIGHT_PAREN            #compositeType
+    | type '*' LEFT_PAREN storageClass RIGHT_PAREN      #pointerType
+    | type '[' Integer ']'                              #arrayType
+// TODO: Decide if should be kept as it is
+//    | type '[' expression ']'                           #runtimeArray
+    ;
 
 storageClass:
     'UniformConstant'
@@ -90,6 +97,12 @@ storageClass:
 
 parameter:
     Identifier (COLON type)?;
+
+LCURLY:
+    '{';
+
+RCURLY:
+    '}';
 
 FLOAT_TERMINATOR:
     'f';

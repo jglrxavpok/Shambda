@@ -44,6 +44,7 @@ public class ShambdaCompiler {
     private final ShambdaTypeInferer typeInferer;
     private String filename;
     private final ParseTreeVisitor<Void> missingConstantsVisitor;
+    private final TypeBuilder typeBuilder;
 
     public ShambdaCompiler(String source) {
         registeredConstants = new HashMap<>();
@@ -53,6 +54,7 @@ public class ShambdaCompiler {
         generator = new ModuleGenerator();
         filename = "<unknown>";
         typeInferer = new ShambdaTypeInferer(this);
+        typeBuilder = new TypeBuilder(this);
         missingConstantsVisitor = new MissingConstantVisitor(this);
     }
 
@@ -308,67 +310,7 @@ public class ShambdaCompiler {
     }
 
     protected Type buildType(ShambdaParser.TypeContext context) {
-        if(context.storageClass() != null) { // is a pointer type
-            String storageClassName = context.storageClass().getText();
-            return new PointerType(StorageClass.valueOf(storageClassName), buildType(context.type()));
-        } else if(context.type() != null) { // has a sub-type
-            String raw = context.Identifier().getText();
-            Type subType = buildType(context.type());
-            if(raw.startsWith("vec")) {
-                String width = raw.substring("vec".length());
-                try {
-                    int size = Integer.parseInt(width);
-                    return new VectorType(subType, size);
-                } catch (Exception e) {
-                    compileError("Vector types must be followed by their size written as in integer: vec2(<type>)");
-                }
-            }
-            if(raw.startsWith("mat")) {
-                String width = raw.substring("mat".length());
-                try {
-                    int columnCount = Integer.parseInt(width);
-                    return new MatrixType(subType, columnCount);
-                } catch (Exception e) {
-                    compileError("Matrix types must be followed by their size written as in integer: mat4(vec2(float32))");
-                }
-            }
-        }
-        return buildPrimitiveType(context.Identifier());
-    }
-
-    private Type buildPrimitiveType(TerminalNode identifier) {
-        String raw = identifier.getText();
-        if(raw.equals("sampler2D")) {
-            return SAMPLER2D_TYPE;
-        }
-        if(raw.startsWith("float")) {
-            String width = raw.substring("float".length());
-            try {
-                int bitWidth = Integer.parseInt(width);
-                return new FloatType(bitWidth);
-            } catch (Exception e) {
-                compileError("Float types must be followed by their width written as in integer: float32, float64");
-            }
-        }
-        if(raw.startsWith("uint")) {
-            String width = raw.substring("uint".length());
-            try {
-                int bitWidth = Integer.parseInt(width);
-                return new IntType(bitWidth, false);
-            } catch (Exception e) {
-                compileError("Unsigned integer types must be followed by their width written as in integer: uint32");
-            }
-        }
-        if(raw.startsWith("int")) {
-            String width = raw.substring("int".length());
-            try {
-                int bitWidth = Integer.parseInt(width);
-                return new IntType(bitWidth, true);
-            } catch (Exception e) {
-                compileError("Integer types must be followed by their width written as in integer: int64");
-            }
-        }
-        return new Type(raw);
+        return context.accept(typeBuilder);
     }
 
     public ModuleConstant getConstant(String constantID) {

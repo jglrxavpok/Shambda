@@ -40,6 +40,18 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStructDefinition(ShambdaParser.StructDefinitionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStructDefinition(ShambdaParser.StructDefinitionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterConstantDeclaration(ShambdaParser.ConstantDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -280,13 +292,49 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType(ShambdaParser.TypeContext ctx) { }
+	@Override public void enterArrayType(ShambdaParser.ArrayTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(ShambdaParser.TypeContext ctx) { }
+	@Override public void exitArrayType(ShambdaParser.ArrayTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPointerType(ShambdaParser.PointerTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPointerType(ShambdaParser.PointerTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBaseType(ShambdaParser.BaseTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBaseType(ShambdaParser.BaseTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCompositeType(ShambdaParser.CompositeTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCompositeType(ShambdaParser.CompositeTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
