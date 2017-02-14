@@ -33,6 +33,11 @@ public class HelloVulkanShader {
         ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D*(Input);;\n" +
                 "fragment:vec4(float32) texCoords:vec2(float32) = vec4(texCoords.x texCoords.y (texCoords.x+texCoords.y)/2f 1f);;");
         compiler.compile();
+        try {
+            printContent(compiler.toBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return compiler.toBytes();
     }
 
