@@ -5,7 +5,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jglr.sbm.*;
 import org.jglr.sbm.sampler.Dimensionality;
 import org.jglr.sbm.sampler.ImageDepth;
@@ -13,11 +12,9 @@ import org.jglr.sbm.sampler.ImageFormat;
 import org.jglr.sbm.sampler.Sampling;
 import org.jglr.sbm.types.*;
 import org.jglr.sbm.utils.*;
-import org.jglr.shambda.grammar.ShambdaBaseVisitor;
 import org.jglr.shambda.grammar.ShambdaLexer;
 import org.jglr.shambda.grammar.ShambdaParser;
 
-import java.beans.IndexedPropertyChangeEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +48,7 @@ public class ShambdaCompiler {
         registeredComponents = new HashMap<>();
         this.source = source;
         functionCompiler = new ShambdaFunctionCompiler(this);
-        generator = new ModuleGenerator();
+        generator = new ModuleGenerator(new StructuredModuleWriter());
         filename = "<unknown>";
         typeInferer = new ShambdaTypeInferer(this);
         typeBuilder = new TypeBuilder(this);

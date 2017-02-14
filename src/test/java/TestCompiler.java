@@ -233,16 +233,18 @@ public class TestCompiler {
             Optional<SpvInstruction> constantInstruction = codeCollector.getInstructions().stream()
                     .filter(i -> i instanceof BooleanConstantInstruction)
                     .findFirst();
-            if( ! constantInstruction.isPresent())
+            if( ! constantInstruction.isPresent()) {
                 throw new RuntimeException("No constant instruction found");
+            }
             BooleanConstantInstruction c = (BooleanConstantInstruction) constantInstruction.get();
             assertEquals(expected, c.getType());
         } else {
             Optional<SpvInstruction> constantInstruction = codeCollector.getInstructions().stream()
                     .filter(i -> i instanceof ConstantInstruction)
                     .findFirst();
-            if( ! constantInstruction.isPresent())
+            if( ! constantInstruction.isPresent()) {
                 throw new RuntimeException("No constant instruction found");
+            }
             ConstantInstruction c = (ConstantInstruction) constantInstruction.get();
             assertEquals(expected, c.getType());
         }
