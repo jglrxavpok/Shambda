@@ -23,29 +23,17 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSetImport(ShambdaParser.SetImportContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#structDefinition}.
+	 * Visit a parse tree produced by {@link ShambdaParser#typeDefinition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStructDefinition(ShambdaParser.StructDefinitionContext ctx);
+	T visitTypeDefinition(ShambdaParser.TypeDefinitionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#constantDeclaration}.
+	 * Visit a parse tree produced by {@link ShambdaParser#memberDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitConstantDeclaration(ShambdaParser.ConstantDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#uniformDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitUniformDeclaration(ShambdaParser.UniformDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ShambdaParser#functionDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunctionDeclaration(ShambdaParser.FunctionDeclarationContext ctx);
+	T visitMemberDeclaration(ShambdaParser.MemberDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ShambdaParser#functionBody}.
 	 * @param ctx the parse tree
@@ -59,13 +47,6 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConstantExpression(ShambdaParser.ConstantExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code wrappedExpr}
-	 * labeled alternative in {@link ShambdaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWrappedExpr(ShambdaParser.WrappedExprContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code dereferenceExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree
@@ -73,40 +54,12 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDereferenceExpr(ShambdaParser.DereferenceExprContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code unaryMinusExpr}
-	 * labeled alternative in {@link ShambdaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code constantExpressionExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitConstantExpressionExpr(ShambdaParser.ConstantExpressionExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code functionCallExpr}
-	 * labeled alternative in {@link ShambdaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code divExpr}
-	 * labeled alternative in {@link ShambdaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDivExpr(ShambdaParser.DivExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code elementAccessExpr}
-	 * labeled alternative in {@link ShambdaParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code multExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.
@@ -128,6 +81,48 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPlusExpr(ShambdaParser.PlusExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code wrappedExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWrappedExpr(ShambdaParser.WrappedExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code uniformExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUniformExpr(ShambdaParser.UniformExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code unaryMinusExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code functionCallExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code divExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDivExpr(ShambdaParser.DivExprContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code elementAccessExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code accessExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.

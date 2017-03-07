@@ -40,49 +40,25 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStructDefinition(ShambdaParser.StructDefinitionContext ctx) { }
+	@Override public void enterTypeDefinition(ShambdaParser.TypeDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStructDefinition(ShambdaParser.StructDefinitionContext ctx) { }
+	@Override public void exitTypeDefinition(ShambdaParser.TypeDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterConstantDeclaration(ShambdaParser.ConstantDeclarationContext ctx) { }
+	@Override public void enterMemberDeclaration(ShambdaParser.MemberDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitConstantDeclaration(ShambdaParser.ConstantDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterUniformDeclaration(ShambdaParser.UniformDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUniformDeclaration(ShambdaParser.UniformDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunctionDeclaration(ShambdaParser.FunctionDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunctionDeclaration(ShambdaParser.FunctionDeclarationContext ctx) { }
+	@Override public void exitMemberDeclaration(ShambdaParser.MemberDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -112,18 +88,6 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWrappedExpr(ShambdaParser.WrappedExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitWrappedExpr(ShambdaParser.WrappedExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDereferenceExpr(ShambdaParser.DereferenceExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -136,18 +100,6 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterConstantExpressionExpr(ShambdaParser.ConstantExpressionExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -155,42 +107,6 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitConstantExpressionExpr(ShambdaParser.ConstantExpressionExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDivExpr(ShambdaParser.DivExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDivExpr(ShambdaParser.DivExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -227,6 +143,78 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPlusExpr(ShambdaParser.PlusExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWrappedExpr(ShambdaParser.WrappedExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWrappedExpr(ShambdaParser.WrappedExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUniformExpr(ShambdaParser.UniformExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUniformExpr(ShambdaParser.UniformExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnaryMinusExpr(ShambdaParser.UnaryMinusExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionCallExpr(ShambdaParser.FunctionCallExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDivExpr(ShambdaParser.DivExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDivExpr(ShambdaParser.DivExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElementAccessExpr(ShambdaParser.ElementAccessExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

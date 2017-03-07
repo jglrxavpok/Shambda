@@ -1,5 +1,6 @@
 package org.jglr.shambda;
 
+import org.jglr.sbm.utils.ModuleConstant;
 import org.jglr.shambda.grammar.ShambdaBaseVisitor;
 import org.jglr.shambda.grammar.ShambdaParser;
 
@@ -51,7 +52,9 @@ public class MissingConstantVisitor extends ShambdaBaseVisitor<Void> {
         ShambdaParser.ConstantExpressionContext constant = ctx.constantExpression();
         String id = compiler.getConstantID(constant);
         if( ! compiler.registeredConstants.containsKey(id)) {
-            compiler.generateConstant(id, compiler.getTypeInferer().inferType(constant), constant);
+            ModuleConstant constantComp = compiler.generateConstant(id, compiler.getTypeInferer().inferType(constant), constant);
+            String constantID = compiler.getConstantID(constant);
+            compiler.writeAndRegisterConstant(constantComp, constantID);
         }
         return null;
     }

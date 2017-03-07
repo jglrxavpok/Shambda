@@ -39,6 +39,7 @@ public class ShambdaCompiler {
     private final Map<String, ModuleComponent> registeredComponents;
     private final ShambdaFunctionCompiler functionCompiler;
     private final ShambdaTypeInferer typeInferer;
+    private final ConstantSimplifier constantSimplifier;
     private String filename;
     private final ParseTreeVisitor<Void> missingConstantsVisitor;
     private final TypeBuilder typeBuilder;
@@ -53,6 +54,7 @@ public class ShambdaCompiler {
         typeInferer = new ShambdaTypeInferer(this);
         typeBuilder = new TypeBuilder(this);
         missingConstantsVisitor = new MissingConstantVisitor(this);
+        constantSimplifier = new ConstantSimplifier(this);
     }
 
     public String getFilename() {
@@ -84,30 +86,44 @@ public class ShambdaCompiler {
             generator.addSetImport(name);
         }
 
-        for (ShambdaParser.ConstantDeclarationContext c : file.constantDeclaration()) {
-            compileConstant(c);
-        }
-
-        for (ShambdaParser.UniformDeclarationContext u : file.uniformDeclaration()) {
-            compileUniform(u);
-        }
-
-        for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
+        for (ShambdaParser.MemberDeclarationContext f : file.memberDeclaration()) {
+            if(f.functionBody().statement().stream().allMatch(this::isConstant)) {
+                compileConstant(f);
+            } else if(f.functionBody().statement().size() == 1) {
+                if(isUniform(f.functionBody().statement(0))) {
+                    compileUniform(f);
+                } else {
+                    registerFunction(f);
+                }
+            } else {
+                registerFunction(f);
+            }
             createMissingConstants(f);
-            registerFunction(f);
         }
 
-        generateEntryPoints(file.functionDeclaration());
+        generateEntryPoints(file.memberDeclaration());
 
-        for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
-            compileFunction(f);
+        for (ShambdaParser.MemberDeclarationContext f : file.memberDeclaration()) {
+            ShambdaParser.ParameterContext signature = f.parameter().get(0);
+            String name = signature.Identifier().getText();
+            if(getComponantWithName(name) != null && getComponantWithName(name).getType() instanceof FunctionType) {
+                compileFunction(f);
+            }
         }
 
         generator.end();
     }
 
-    private void generateEntryPoints(List<ShambdaParser.FunctionDeclarationContext> contexts) {
-        for(ShambdaParser.FunctionDeclarationContext c : contexts) {
+    private boolean isUniform(ShambdaParser.StatementContext context) {
+        return context.accept(UniformFilterVisitor.INSTANCE);
+    }
+
+    private boolean isConstant(ShambdaParser.StatementContext context) {
+        return context.accept(ConstantFilterVisitor.INSTANCE);
+    }
+
+    private void generateEntryPoints(List<ShambdaParser.MemberDeclarationContext> contexts) {
+        for(ShambdaParser.MemberDeclarationContext c : contexts) {
             String name = c.parameter(0).Identifier().getText();
             if(name.equals("fragment")) {
                 ModuleFunction function = (ModuleFunction) getComponantWithName("fragment");
@@ -144,7 +160,7 @@ public class ShambdaCompiler {
         func.end();
     }
 
-    private void registerFunction(ShambdaParser.FunctionDeclarationContext context) {
+    private void registerFunction(ShambdaParser.MemberDeclarationContext context) {
         ShambdaParser.ParameterContext signature = context.parameter().get(0);
         String name = signature.Identifier().getText();
         Type returnType = null;
@@ -168,7 +184,7 @@ public class ShambdaCompiler {
         registeredComponents.put(name, function);
     }
 
-    private void createMissingConstants(ShambdaParser.FunctionDeclarationContext context) {
+    private void createMissingConstants(ShambdaParser.MemberDeclarationContext context) {
         ShambdaParser.FunctionBodyContext body = context.functionBody();
         for(ShambdaParser.StatementContext s : body.statement()) {
             ShambdaParser.ExpressionContext expressionToCheck;
@@ -213,7 +229,7 @@ public class ShambdaCompiler {
         return null;
     }
 
-    private void compileFunction(ShambdaParser.FunctionDeclarationContext context) {
+    private void compileFunction(ShambdaParser.MemberDeclarationContext context) {
         ShambdaParser.ParameterContext signature = context.parameter().get(0);
         String name = signature.Identifier().getText();
         ModuleFunction function = (ModuleFunction) registeredComponents.get(name);
@@ -222,55 +238,34 @@ public class ShambdaCompiler {
         functionCompiler.compile(generator.createFunction(function), context);
     }
 
-    private void compileUniform(ShambdaParser.UniformDeclarationContext context) {
-        String name = context.parameter().Identifier().getText();
-        if(context.parameter().type() == null)
+    private void compileUniform(ShambdaParser.MemberDeclarationContext context) {
+        String name = context.parameter(0).Identifier().getText();
+        if(context.parameter(0).type() == null)
             compileError("Error while compiling uniform "+name+": uniform types cannot be inferred, the type of the uniform must follow its name");
-        Type type = buildType(context.parameter().type());
+        Type type = buildType(context.parameter(0).type());
         ModuleVariable result = generator.declareVariable(name, type, StorageClass.UniformConstant);
 
         registeredComponents.put(name, result);
     }
 
     private void createNames(ShambdaParser.FileContext file) {
-        for (ShambdaParser.ConstantDeclarationContext c : file.constantDeclaration()) {
-            generator.name(c.parameter().Identifier().getText());
-        }
-
-        for (ShambdaParser.UniformDeclarationContext u : file.uniformDeclaration()) {
-            generator.name(u.parameter().Identifier().getText());
-        }
-
-        for (ShambdaParser.FunctionDeclarationContext f : file.functionDeclaration()) {
+        for (ShambdaParser.MemberDeclarationContext f : file.memberDeclaration()) {
             generator.name(f.parameter().get(0).Identifier().getText());
         }
     }
 
-    private void compileConstant(ShambdaParser.ConstantDeclarationContext context) {
-        ShambdaParser.ParameterContext parameter = context.parameter();
-        String name = parameter.Identifier().getText();
-        Type type = null;
-        if(parameter.type() != null) {
-            type = buildType(parameter.type());
-        }
-
-        ShambdaParser.ConstantExpressionContext expression = context.constantExpression();
-        generateConstant(name, type, expression);
+    private void compileConstant(ShambdaParser.MemberDeclarationContext context) {
+        constantSimplifier.simplify(context);
     }
 
-    protected void generateConstant(String name, Type type, ShambdaParser.ConstantExpressionContext expression) {
+    protected ModuleConstant generateConstant(String name, Type type, ShambdaParser.ConstantExpressionContext expression) {
         long[] bitPattern = new long[0];
         Type inferredType = typeInferer.inferType(expression);
         if(type != null && !type.equals(inferredType)) {
             compileError("Explicit and inferred types differ, explicit: "+type+" / inferred: "+inferredType);
         }
         if(inferredType != null && inferredType.equals(BOOL_TYPE)) {
-            String constantID = getConstantID(expression);
-            ModuleConstant constant = generator.constantBool(name, expression.Boolean().getText().equals("true"));
-            registeredConstants.put(constantID, constant);
-
-            registeredComponents.put(name, constant);
-            return;
+            return new ModuleBoolConstant(name, expression.Boolean().getText().equals("true"));
         }
         if(expression.Integer() != null) {
             int value = Integer.parseInt(expression.Integer().getText());
@@ -299,11 +294,7 @@ public class ShambdaCompiler {
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL, (value >> 32) & 0x00000000FFFFFFFFL};
         }
         // register constant id
-        String constantID = getConstantID(expression);
-        ModuleConstant constant = generator.constant(name, inferredType, bitPattern);
-        registeredConstants.put(constantID, constant);
-
-        registeredComponents.put(name, constant);
+        return new ModuleConstant(name, type, bitPattern);
     }
 
     protected Type buildType(ShambdaParser.TypeContext context) {
@@ -338,4 +329,13 @@ public class ShambdaCompiler {
         return generator.nextTmpID();
     }
 
+    public void writeAndRegisterConstant(ModuleConstant constant, String constantID) {
+        if(constant instanceof ModuleBoolConstant) {
+            generator.constantBool(constant.getName(), ((ModuleBoolConstant) constant).getValue());
+        } else {
+            generator.constant(constant.getName(), constant.getType(), constant.getBitPattern());
+        }
+        registeredConstants.put(constantID, constant);
+        registeredComponents.put(constant.getName(), constant);
+    }
 }

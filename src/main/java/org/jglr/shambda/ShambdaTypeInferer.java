@@ -43,7 +43,7 @@ public class ShambdaTypeInferer {
         return null;
     }
 
-    public FunctionType inferFunctionType(ShambdaParser.FunctionDeclarationContext context, List<ShambdaParser.ParameterContext> parameters) {
+    public FunctionType inferFunctionType(ShambdaParser.MemberDeclarationContext context, List<ShambdaParser.ParameterContext> parameters) {
         // TODO
         return null;
     }

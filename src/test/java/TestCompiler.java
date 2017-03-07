@@ -101,7 +101,7 @@ public class TestCompiler {
 
     @Test
     public void testNegateShader() throws IOException {
-        ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D*(Input);;\n" +
+        ShambdaCompiler compiler = new ShambdaCompiler("texture:sampler2D*(Input) = uniform;;\n" +
                 "fragment:vec4(float32) texCoords:vec2(float32) = -vec4 $ -1f 0f (-1f) (-1f);;");
         compiler.compile();
         printContent("testNegateShader", compiler.toBytes());
@@ -117,8 +117,8 @@ public class TestCompiler {
 
     @Test
     public void testUseMultipleConstants() throws IOException {
-        ShambdaCompiler compiler = new ShambdaCompiler("constant ac = 2;;\n" +
-                "constant ad = 45;;\n" +
+        ShambdaCompiler compiler = new ShambdaCompiler("ac = 2;;\n" +
+                "ad = 45;;\n" +
                 "func:vec2(int32) = vec2(ac ad);;");
         compiler.compile();
         printContent("testUseMultipleConstants", compiler.toBytes());
@@ -126,7 +126,7 @@ public class TestCompiler {
 
     @Test
     public void testUseUniform() throws IOException {
-        ShambdaCompiler compiler = new ShambdaCompiler("uniform myuniform:vec4(uint32);;\n" +
+        ShambdaCompiler compiler = new ShambdaCompiler("myuniform:vec4(uint32) = uniform;;\n" +
                 "myfunction:vec4(uint32) = myuniform;;");
         compiler.compile();
         ModuleReader reader = new ModuleReader(compiler.toBytes());
@@ -140,7 +140,7 @@ public class TestCompiler {
 
     @Test
     public void testUseConstant() throws IOException {
-        ShambdaCompiler compiler = new ShambdaCompiler("constant myconstant = 42f;;\n" +
+        ShambdaCompiler compiler = new ShambdaCompiler("myconstant = 42f;;\n" +
                 "myfunction:float32 = myconstant;;");
         compiler.compile();
         ModuleReader reader = new ModuleReader(compiler.toBytes());
@@ -202,25 +202,25 @@ public class TestCompiler {
 
     @Test
     public void testConstantTypes() throws IOException {
-        checkConstantType("constant float:float32 = 42f;;", ShambdaCompiler.FLOAT_TYPE);
-        checkConstantType("constant unsigned:uint64 = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
-        checkConstantType("constant double:float64 = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
-        checkConstantType("constant true_boolean:bool = true;;", ShambdaCompiler.BOOL_TYPE);
-        checkConstantType("constant false_boolean:bool = false;;", ShambdaCompiler.BOOL_TYPE);
+        checkConstantType("float:float32 = 42f;;", ShambdaCompiler.FLOAT_TYPE);
+        checkConstantType("unsigned:uint64 = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
+        checkConstantType("double:float64 = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
+        checkConstantType("true_boolean:bool = true;;", ShambdaCompiler.BOOL_TYPE);
+        checkConstantType("false_boolean:bool = false;;", ShambdaCompiler.BOOL_TYPE);
 
-        checkConstantType("constant float_inferred = 42f;;", ShambdaCompiler.FLOAT_TYPE);
-        checkConstantType("constant unsigned_inferred = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
-        checkConstantType("constant double_inferred = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
-        checkConstantType("constant true_boolean_inferred = true;;", ShambdaCompiler.BOOL_TYPE);
-        checkConstantType("constant false_boolean_inferred = false;;", ShambdaCompiler.BOOL_TYPE);
+        checkConstantType("float_inferred = 42f;;", ShambdaCompiler.FLOAT_TYPE);
+        checkConstantType("unsigned_inferred = u45648705464L;;", ShambdaCompiler.UNSIGNED_LONG_TYPE);
+        checkConstantType("double_inferred = 5689.265d;;", ShambdaCompiler.DOUBLE_TYPE);
+        checkConstantType("true_boolean_inferred = true;;", ShambdaCompiler.BOOL_TYPE);
+        checkConstantType("false_boolean_inferred = false;;", ShambdaCompiler.BOOL_TYPE);
     }
 
     @Test
     public void testUniformTypes() throws IOException {
-        checkUniformType("uniform color:vec4(float32);;", new VectorType(ShambdaCompiler.FLOAT_TYPE, 4));
-        checkUniformType("uniform time:float64;;", ShambdaCompiler.DOUBLE_TYPE);
-        checkUniformType("uniform texture:int32*(Input);;", new PointerType(StorageClass.Input, ShambdaCompiler.INT_TYPE));
-        checkUniformType("uniform projection:mat4(vec4(float64));;", new MatrixType(new VectorType(ShambdaCompiler.DOUBLE_TYPE, 4), 4));
+        checkUniformType("color:vec4(float32) = uniform;;", new VectorType(ShambdaCompiler.FLOAT_TYPE, 4));
+        checkUniformType("time:float64 = uniform;;", ShambdaCompiler.DOUBLE_TYPE);
+        checkUniformType("texture:int32*(Input) = uniform;;", new PointerType(StorageClass.Input, ShambdaCompiler.INT_TYPE));
+        checkUniformType("projection:mat4(vec4(float64)) = uniform;;", new MatrixType(new VectorType(ShambdaCompiler.DOUBLE_TYPE, 4), 4));
     }
 
     private void checkConstantType(String source, Type expected) throws IOException {

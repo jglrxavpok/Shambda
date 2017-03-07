@@ -1,22 +1,16 @@
 grammar Shambda;
 
 file:
-    (structDefinition | setImport | functionDeclaration | uniformDeclaration | constantDeclaration)* EOF;
+    (typeDefinition | setImport | memberDeclaration)* EOF;
 
 setImport:
     'import' (Identifier | Integer) ('.' (Identifier | Integer))* DOUBLE_SEMI_COLON;
 
-structDefinition:
-    'struct' Identifier LCURLY (parameter SEMI_COLON)* RCURLY DOUBLE_SEMI_COLON;
+typeDefinition:
+    'type' Identifier LCURLY (parameter SEMI_COLON)* RCURLY DOUBLE_SEMI_COLON;
 
-constantDeclaration:
-    'constant' parameter EQUAL_SIGN constantExpression DOUBLE_SEMI_COLON;
-
-uniformDeclaration:
-    'uniform' parameter DOUBLE_SEMI_COLON;
-
-functionDeclaration:
-    parameter parameter* EQUAL_SIGN functionBody;
+memberDeclaration:
+    parameter+ EQUAL_SIGN functionBody;
 
 functionBody:
     statement (SEMI_COLON statement)* DOUBLE_SEMI_COLON;
@@ -31,13 +25,17 @@ LongNumber:
     Digits LONG_TERMINATOR;
 
 DoubleNumber:
-    Digits (PERIOD Digits)? 'd';
+    Digits (PERIOD Digits)? ('d' | 'D');
 
 FloatingPointNumber:
     Digits (PERIOD Digits)? FLOAT_TERMINATOR;
 
 Boolean:
     'true' | 'false';
+
+UniformDeclaration
+    : 'uniform'
+    ;
 
 constantExpression:
     Integer | FloatingPointNumber | LongNumber | DoubleNumber | UnsignedInteger | UnsignedLong | Boolean;
@@ -46,18 +44,23 @@ Integer:
     Digits;
 
 expression
-    : '!' expression                    #dereferenceExpr
-    | '-' expression                    #unaryMinusExpr
-    | functionCall                      #functionCallExpr
-    | constantExpression                #constantExpressionExpr
-    | Identifier                        #idExpr
-    | expression '[' expression ']'     #elementAccessExpr
-    | expression '.' Identifier         #accessExpr
-    | LEFT_PAREN expression RIGHT_PAREN #wrappedExpr
-    | expression '*' expression         #multExpr
-    | expression '/' expression         #divExpr
-    | expression '-' expression         #minusExpr
-    | expression '+' expression         #plusExpr
+    : '!' expression                                            #dereferenceExpr
+    | '-' expression                                            #unaryMinusExpr
+    | functionCall                                              #functionCallExpr
+    | constantExpression                                        #constantExpressionExpr
+    | Identifier                                                #idExpr
+    | expression '[' expression ']'                             #elementAccessExpr
+    | expression '.' Identifier                                 #accessExpr
+    | LEFT_PAREN expression RIGHT_PAREN                         #wrappedExpr
+    | expression '*' BinaryOperatorSuffix? expression           #multExpr
+    | expression '/' BinaryOperatorSuffix? expression           #divExpr
+    | expression '-' BinaryOperatorSuffix? expression           #minusExpr
+    | expression '+' BinaryOperatorSuffix? expression           #plusExpr
+    | UniformDeclaration                                        #uniformExpr
+    ;
+
+BinaryOperatorSuffix
+    : ('..'|'...'|'l'|'u')
     ;
 
 statement:
@@ -105,11 +108,13 @@ LCURLY:
 RCURLY:
     '}';
 
-FLOAT_TERMINATOR:
-    'f';
+FLOAT_TERMINATOR
+    : 'f'
+    | 'F';
 
-LONG_TERMINATOR:
-    'L';
+LONG_TERMINATOR
+    : 'L'
+    | 'l';
 
 DOUBLE_SEMI_COLON:
     ';;';

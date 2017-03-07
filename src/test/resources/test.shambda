@@ -1,12 +1,12 @@
-constant float:float32 = 42f;;
-constant unsigned:uint64 = u45648705464L;;
-constant double:float64 = 5689.265d;;
-constant float_inferred = 42f;;
-constant unsigned_inferred = u45648705464L;;
-constant double_inferred = 5689.265d;;
-uniform color:vec4(float32);;
-uniform time:float64;;
-uniform texture:int32*(Input);;
-uniform projection:mat4(vec4(float64));;
+float:float32 = 42f;;
+unsigned:uint64 = u45648705464L;;
+double:float64 = 5689.265d;;
+float_inferred = 42f;;
+unsigned_inferred = u45648705464L;;
+double_inferred = 5689.265d;;
+color:vec4(float32) = uniform;;
+time:float64 = uniform;;
+texture:int32*(Input) = uniform;;
+projection:mat4(vec4(float64)) = uniform;;
 
 myfunc:vec2(float32) = vec2(float 3.14f);;

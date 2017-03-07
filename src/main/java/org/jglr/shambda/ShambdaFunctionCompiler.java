@@ -21,7 +21,7 @@ public class ShambdaFunctionCompiler {
         expressionCompiler = new ExpressionCompiler();
     }
 
-    public void compile(FunctionGenerator generator, ShambdaParser.FunctionDeclarationContext context) {
+    public void compile(FunctionGenerator generator, ShambdaParser.MemberDeclarationContext context) {
         Map<String, ModuleVariable> parameters = new HashMap<>();
         for (int i = 1; i < context.parameter().size(); i++) {
             ShambdaParser.ParameterContext paramData = context.parameter().get(i);
