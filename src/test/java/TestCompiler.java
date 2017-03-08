@@ -101,7 +101,7 @@ public class TestCompiler {
 
     @Test
     public void testNegateShader() throws IOException {
-        ShambdaCompiler compiler = new ShambdaCompiler("texture:sampler2D*(Input) = uniform;;\n" +
+        ShambdaCompiler compiler = new ShambdaCompiler("texture:sampler2D#(Input) = uniform;;\n" +
                 "fragment:vec4(float32) texCoords:vec2(float32) = -vec4 $ -1f 0f (-1f) (-1f);;");
         compiler.compile();
         printContent("testNegateShader", compiler.toBytes());
@@ -109,7 +109,7 @@ public class TestCompiler {
 
     @Test
     public void testFragmentShader() throws IOException {
-        ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D*(Input);;\n" +
+        ShambdaCompiler compiler = new ShambdaCompiler("uniform texture:sampler2D#(Input);;\n" +
                 "fragment:vec4(float32) texCoords:vec2(float32) = sample(!texture texCoords);;");
         compiler.compile();
         printContent("testFragmentShader", compiler.toBytes());
@@ -219,7 +219,7 @@ public class TestCompiler {
     public void testUniformTypes() throws IOException {
         checkUniformType("color:vec4(float32) = uniform;;", new VectorType(ShambdaCompiler.FLOAT_TYPE, 4));
         checkUniformType("time:float64 = uniform;;", ShambdaCompiler.DOUBLE_TYPE);
-        checkUniformType("texture:int32*(Input) = uniform;;", new PointerType(StorageClass.Input, ShambdaCompiler.INT_TYPE));
+        checkUniformType("texture:int32#(Input) = uniform;;", new PointerType(StorageClass.Input, ShambdaCompiler.INT_TYPE));
         checkUniformType("projection:mat4(vec4(float64)) = uniform;;", new MatrixType(new VectorType(ShambdaCompiler.DOUBLE_TYPE, 4), 4));
     }
 
@@ -265,7 +265,7 @@ public class TestCompiler {
         VariableInstruction c = (VariableInstruction) constantInstruction.get();
         assertEquals(expected, c.getResultType());
         assertEquals(StorageClass.UniformConstant, c.getStorageClass());
-        printContent("Test uniform "+expected.getName().replace("*", "(Pointer)"), compiler.toBytes());
+        printContent("Test uniform "+expected.getName().replace("#", "(Pointer)"), compiler.toBytes());
     }
 
     private static void printContent(String filename, byte[] bytes) throws IOException {

@@ -88,6 +88,18 @@ public class ShambdaBaseListener implements ShambdaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterProvidedExpr(ShambdaParser.ProvidedExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProvidedExpr(ShambdaParser.ProvidedExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDereferenceExpr(ShambdaParser.DereferenceExprContext ctx) { }
 	/**
 	 * {@inheritDoc}

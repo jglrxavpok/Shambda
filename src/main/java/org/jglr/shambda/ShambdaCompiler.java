@@ -94,11 +94,12 @@ public class ShambdaCompiler {
                     compileUniform(f);
                 } else {
                     registerFunction(f);
+                    createMissingConstants(f);
                 }
             } else {
                 registerFunction(f);
+                createMissingConstants(f);
             }
-            createMissingConstants(f);
         }
 
         generateEntryPoints(file.memberDeclaration());
@@ -293,8 +294,7 @@ public class ShambdaCompiler {
             long value = Long.parseLong(expression.UnsignedLong().getText().replace("u", "").replace("L", ""));
             bitPattern = new long[]{value & 0x00000000FFFFFFFFL, (value >> 32) & 0x00000000FFFFFFFFL};
         }
-        // register constant id
-        return new ModuleConstant(name, type, bitPattern);
+        return new ModuleConstant(name, inferredType, bitPattern);
     }
 
     protected Type buildType(ShambdaParser.TypeContext context) {
@@ -335,7 +335,12 @@ public class ShambdaCompiler {
         } else {
             generator.constant(constant.getName(), constant.getType(), constant.getBitPattern());
         }
-        registeredConstants.put(constantID, constant);
+        if(constantID != null)
+            registeredConstants.put(constantID, constant);
         registeredComponents.put(constant.getName(), constant);
+    }
+
+    public void typeError(String message, ParserRuleContext location) {
+        throw new ShambdaTypeError(message+" in "+filename+" at line "+location.getStart().getLine()+";"+location.getStart().getCharPositionInLine());
     }
 }

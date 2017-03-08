@@ -45,22 +45,43 @@ Integer:
 
 expression
     : '!' expression                                            #dereferenceExpr
-    | '-' expression                                            #unaryMinusExpr
+    | SubOperator expression                                    #unaryMinusExpr
     | functionCall                                              #functionCallExpr
     | constantExpression                                        #constantExpressionExpr
     | Identifier                                                #idExpr
     | expression '[' expression ']'                             #elementAccessExpr
     | expression '.' Identifier                                 #accessExpr
     | LEFT_PAREN expression RIGHT_PAREN                         #wrappedExpr
-    | expression '*' BinaryOperatorSuffix? expression           #multExpr
-    | expression '/' BinaryOperatorSuffix? expression           #divExpr
-    | expression '-' BinaryOperatorSuffix? expression           #minusExpr
-    | expression '+' BinaryOperatorSuffix? expression           #plusExpr
+    | expression MultOperator expression                        #multExpr
+    | expression DivOperator expression                         #divExpr
+    | expression SubOperator expression                         #minusExpr
+    | expression AddOperator expression                         #plusExpr
     | UniformDeclaration                                        #uniformExpr
+    | ProvidedFunction                                          #providedExpr
     ;
 
-BinaryOperatorSuffix
-    : ('..'|'...'|'l'|'u')
+ProvidedFunction
+    : 'provided'
+    ;
+
+fragment BinaryOperatorSuffix
+    : ('.'|'..'|'l'|'u'|'ul'|'lu')?
+    ;
+
+MultOperator
+    : '*' BinaryOperatorSuffix
+    ;
+
+DivOperator
+    : '/' BinaryOperatorSuffix
+    ;
+
+AddOperator
+    : '+' BinaryOperatorSuffix
+    ;
+
+SubOperator
+    : '-' BinaryOperatorSuffix
     ;
 
 statement:
@@ -79,7 +100,8 @@ functionCall:
 type
     : Identifier                                        #baseType
     | Identifier LEFT_PAREN type RIGHT_PAREN            #compositeType
-    | type '*' LEFT_PAREN storageClass RIGHT_PAREN      #pointerType
+    | type '#' storageClass                             #pointerType
+    | type '#' LEFT_PAREN storageClass RIGHT_PAREN      #pointerType
     | type '[' Integer ']'                              #arrayType
 // TODO: Decide if should be kept as it is
 //    | type '[' expression ']'                           #runtimeArray

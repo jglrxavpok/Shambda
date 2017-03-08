@@ -53,8 +53,7 @@ public class MissingConstantVisitor extends ShambdaBaseVisitor<Void> {
         String id = compiler.getConstantID(constant);
         if( ! compiler.registeredConstants.containsKey(id)) {
             ModuleConstant constantComp = compiler.generateConstant(id, compiler.getTypeInferer().inferType(constant), constant);
-            String constantID = compiler.getConstantID(constant);
-            compiler.writeAndRegisterConstant(constantComp, constantID);
+            compiler.writeAndRegisterConstant(constantComp, id);
         }
         return null;
     }

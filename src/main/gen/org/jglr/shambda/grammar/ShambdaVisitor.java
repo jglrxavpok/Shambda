@@ -47,6 +47,13 @@ public interface ShambdaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConstantExpression(ShambdaParser.ConstantExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code providedExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProvidedExpr(ShambdaParser.ProvidedExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code dereferenceExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree

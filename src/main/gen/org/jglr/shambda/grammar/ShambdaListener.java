@@ -68,6 +68,18 @@ public interface ShambdaListener extends ParseTreeListener {
 	 */
 	void exitConstantExpression(ShambdaParser.ConstantExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code providedExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterProvidedExpr(ShambdaParser.ProvidedExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code providedExpr}
+	 * labeled alternative in {@link ShambdaParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitProvidedExpr(ShambdaParser.ProvidedExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code dereferenceExpr}
 	 * labeled alternative in {@link ShambdaParser#expression}.
 	 * @param ctx the parse tree
