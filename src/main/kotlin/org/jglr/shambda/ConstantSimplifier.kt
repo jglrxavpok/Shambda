@@ -60,6 +60,28 @@ class ConstantSimplifier(private val compiler: ShambdaCompiler) : ShambdaBaseVis
         return handleOperation(left, right, ctx.SubOperator().text, Long::minus, BigInteger::minus, Double::minus, Float::minus)
     }
 
+    override fun visitUnaryMinusExpr(ctx: ShambdaParser.UnaryMinusExprContext?): ModuleConstant {
+        val value = ctx!!.expression().accept(this)
+        val expectedType = suffixType(ctx.SubOperator().text)
+        if(expectedType != value.type)
+            compiler.typeError("Invalid use of unary operator ${ctx.SubOperator().text} <$expectedType> with type <${value.type}>", ctx)
+        val name = "\$constant_neg(${value.name})"
+        return when(expectedType) {
+            ShambdaCompiler.FLOAT_TYPE -> ModuleConstant(name, expectedType, longArrayOf(value.bitPattern[0] xor (1L shl 31))) // invert sign bit
+            ShambdaCompiler.UNSIGNED_INT_TYPE, ShambdaCompiler.UNSIGNED_LONG_TYPE -> {
+                compiler.typeError("Cannot negate unsigned value of type <${expectedType}>", ctx)
+                value // Added just so the Kotlin compiler is not sad
+            }
+            ShambdaCompiler.INT_TYPE -> ModuleConstant(name, expectedType, longArrayOf((-value.bitPattern[0].toInt()).toLong() and INT2LONG_MASK))
+            ShambdaCompiler.LONG_TYPE -> {
+                val result = -(value.bitPattern[0] + (value.bitPattern[1] shl 32))
+                ModuleConstant(name, expectedType, longArrayOf(result and INT2LONG_MASK, (result shr 32) and INT2LONG_MASK))
+            }
+            ShambdaCompiler.DOUBLE_TYPE -> ModuleConstant(name, expectedType, longArrayOf(value.bitPattern[0], value.bitPattern[1] xor (1L shl 31))) // invert sign bit
+            else -> TODO("Not implemented for type $expectedType")
+        }
+    }
+
     private fun handleOperation(left: ModuleConstant, right: ModuleConstant, opname: String, opLongs: (Long, Long) -> Long,
                                 opBigInteger: (BigInteger, BigInteger) -> BigInteger, opDouble: (Double, Double) -> Double,
                                 opFloat: (Float, Float) -> Float): ModuleConstant {
@@ -97,16 +119,20 @@ class ConstantSimplifier(private val compiler: ShambdaCompiler) : ShambdaBaseVis
     }
 
     private fun checkTypeAndSuffix(operator: String, left: ModuleConstant, right: ModuleConstant, location: ParserRuleContext) {
-        val expectedType = when(operator.substring(1)) {
+        val expectedType = suffixType(operator)
+        if(left.type != expectedType || right.type != expectedType) {
+            compiler.typeError("Invalid use of operator <$expectedType> $operator <$expectedType>: <${left.type}> $operator <${right.type}>", location)
+        }
+    }
+
+    private fun suffixType(operator: String): Type {
+        return when(operator.substring(1)) {
             "." -> ShambdaCompiler.FLOAT_TYPE
             ".." -> ShambdaCompiler.DOUBLE_TYPE
             "l" -> ShambdaCompiler.LONG_TYPE
             "u" -> ShambdaCompiler.UNSIGNED_INT_TYPE
             "ul", "lu" -> ShambdaCompiler.UNSIGNED_LONG_TYPE
             else -> ShambdaCompiler.INT_TYPE
-        }
-        if(left.type != expectedType || right.type != expectedType) {
-            compiler.typeError("Invalid use of operator <$expectedType> $operator <$expectedType>: <${left.type}> $operator <${right.type}>", location)
         }
     }
 

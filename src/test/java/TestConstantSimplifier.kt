@@ -30,13 +30,28 @@ class TestConstantSimplifier {
     val thrown = ExpectedException.none()
 
     @Test
+    fun impossibleNegation() {
+        thrown.expect(ShambdaTypeError::class.java)
+        thrown.expectMessage("Cannot negate unsigned value of type <uint32>")
+        compile("a = -u u456;;")
+    }
+
+    @Test
+    fun negations() {
+        printContent("negations0", compile("a = -4;;"))
+        printContent("negations1", compile("a = -.4f;;"))
+        printContent("negations2", compile("a = -..4D;;"))
+        printContent("negations3", compile("a = -l4L;;"))
+    }
+
+    @Test
     fun correctOperatorTypes() {
         printContent("correctOperatorTypes0", compile("a = u455 /u u4;;"))
         printContent("correctOperatorTypes1", compile("b = 4.5D *.. 45680D;;"))
         printContent("correctOperatorTypes2", compile("c = u45L +ul u4876L;;"))
         printContent("correctOperatorTypes3", compile("d = 45 - 1;;"))
         printContent("correctOperatorTypes4", compile("e = 45.4f -. 876f;;"))
-        printContent("correctOperatorTypes5", compile("f0 = 45.4f *. (0f-.876f);;"))
+        printContent("correctOperatorTypes5", compile("f0 = 45.4f *. -.876f;;"))
     }
 
     @Test
@@ -63,7 +78,7 @@ class TestConstantSimplifier {
         out.flush()
         out.close()
 
-        print("=== START ===")
+        println("=== START ===")
         val reader = ModuleReader(bytes)
         reader.visitHeader()
         val codeCollector = reader.visitCode() as CodeCollector
@@ -73,6 +88,6 @@ class TestConstantSimplifier {
                 print("%" + i.resultID + " = ")
             println(i.toString())
         }
-        print("=== END ===")
+        println("=== END ===")
     }
 }

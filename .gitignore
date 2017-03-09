@@ -5,3 +5,8 @@ out/
 
 ## Gradle
 .gradle
+
+helloVk.frag.spv
+helloVk_original.frag.spv
+hs_err_*.log
+tests/
