@@ -5,6 +5,7 @@ import org.jglr.sbm.types.Type
 import org.jglr.sbm.utils.ModuleConstant
 import org.jglr.shambda.grammar.ShambdaBaseVisitor
 import org.jglr.shambda.grammar.ShambdaParser
+import org.jglr.shambda.types.suffixType
 import java.math.BigInteger
 
 class ConstantSimplifier(private val compiler: ShambdaCompiler) : ShambdaBaseVisitor<ModuleConstant>() {
@@ -122,17 +123,6 @@ class ConstantSimplifier(private val compiler: ShambdaCompiler) : ShambdaBaseVis
         val expectedType = suffixType(operator)
         if(left.type != expectedType || right.type != expectedType) {
             compiler.typeError("Invalid use of operator <$expectedType> $operator <$expectedType>: <${left.type}> $operator <${right.type}>", location)
-        }
-    }
-
-    private fun suffixType(operator: String): Type {
-        return when(operator.substring(1)) {
-            "." -> ShambdaCompiler.FLOAT_TYPE
-            ".." -> ShambdaCompiler.DOUBLE_TYPE
-            "l" -> ShambdaCompiler.LONG_TYPE
-            "u" -> ShambdaCompiler.UNSIGNED_INT_TYPE
-            "ul", "lu" -> ShambdaCompiler.UNSIGNED_LONG_TYPE
-            else -> ShambdaCompiler.INT_TYPE
         }
     }
 

@@ -1,2 +1,2 @@
 rootProject.name = 'shambda'
-include 'SBM', 'Flows'
+include 'SBM', 'Flows', 'AbstractTypeInference'

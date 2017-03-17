@@ -5,3 +5,7 @@
 [submodule "SBM"]
 	path = SBM
 	url = git://github.com/jglrxavpok/SBM.git
+
+[submodule "AbstractTypeInference"]
+    path = AbstractTypeInference
+    url = git://github.com/jglrxavpok/AbstractTypeInference.git

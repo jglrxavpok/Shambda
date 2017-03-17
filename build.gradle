@@ -54,6 +54,7 @@ dependencies {
 
     compile project(":SBM")
     compile project(":Flows")
+    compile project(":AbstractTypeInference")
     testCompile "org.lwjgl:lwjgl:${lwjglVersion}"
     testCompile "org.lwjgl:lwjgl-bgfx:${lwjglVersion}"
     testCompile "org.lwjgl:lwjgl-glfw:${lwjglVersion}"
