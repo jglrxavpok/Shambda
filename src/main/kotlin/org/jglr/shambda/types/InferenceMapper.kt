@@ -33,23 +33,33 @@ class InferenceMapper(val compiler: ShambdaCompiler) : ShambdaBaseVisitor<Expres
             is SBMFunctionType -> {
                 val arg = TupleType(type.parameters.map(this::mapType).toTypedArray())
                 FunctionType(arg, mapType(type.returnType))
-            } ShambdaCompiler.DOUBLE_TYPE -> {
+            }
+
+            ShambdaCompiler.DOUBLE_TYPE -> {
                 Double
-            } ShambdaCompiler.LONG_TYPE -> {
+            }
+            ShambdaCompiler.LONG_TYPE -> {
                 Long
-            } ShambdaCompiler.FLOAT_TYPE -> {
+            }
+            ShambdaCompiler.FLOAT_TYPE -> {
                 Float
-            } ShambdaCompiler.INT_TYPE -> {
+            }
+            ShambdaCompiler.INT_TYPE -> {
                 Integer
-            } ShambdaCompiler.UNSIGNED_LONG_TYPE -> {
+            }
+            ShambdaCompiler.UNSIGNED_LONG_TYPE -> {
                 ULong
-            } ShambdaCompiler.UNSIGNED_INT_TYPE -> {
+            }
+            ShambdaCompiler.UNSIGNED_INT_TYPE -> {
                 UInteger
-            } ShambdaCompiler.BOOL_TYPE -> {
+            }
+            ShambdaCompiler.BOOL_TYPE -> {
                 Bool
-            } ShambdaCompiler.SAMPLER2D_TYPE -> {
+            }
+            ShambdaCompiler.SAMPLER2D_TYPE -> {
                 Sampler2D
-            } else -> {
+            }
+            else -> {
                 null!!
             }
         }

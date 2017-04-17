@@ -1,3 +1,4 @@
+import junit.framework.Assert.assertEquals
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.jglr.inference.TypeInferer
@@ -5,6 +6,7 @@ import org.jglr.shambda.ShambdaCompiler
 import org.jglr.shambda.grammar.ShambdaLexer
 import org.jglr.shambda.grammar.ShambdaParser
 import org.jglr.shambda.types.InferenceMapper
+import org.jglr.shambda.types.Integer
 import org.junit.Test
 
 class TestInferer {
@@ -21,6 +23,6 @@ class TestInferer {
         val inferer = TypeInferer()
         val mapped = mapper.map(expression)
         inferer.infer(mapped)
-        println(mapped)
+        assertEquals(Integer, mapped.type)
     }
 }

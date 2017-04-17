@@ -10,6 +10,11 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    jcenter()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
 }
 
 import org.gradle.internal.os.OperatingSystem
